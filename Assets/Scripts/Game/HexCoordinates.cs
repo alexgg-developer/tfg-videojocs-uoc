@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [System.Serializable]
 public struct HexCoordinates
@@ -50,6 +51,13 @@ public struct HexCoordinates
     {
         //return new HexCoordinates(x, z);
         return new HexCoordinates(x - z / 2, z);
+    }
+
+    public static Tuple<int, int> ToOffsetCoordinates(HexCoordinates hexCoordinates)
+    {
+        int x = hexCoordinates.x;
+        int z = hexCoordinates.z;
+        return Tuple.Create(x + z / 2, z);
     }
 
     public static HexCoordinates FromPosition(Vector3 position)

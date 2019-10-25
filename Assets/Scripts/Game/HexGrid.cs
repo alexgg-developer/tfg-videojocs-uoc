@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
-    public int width = 6;
-    public int height = 6;
 
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
@@ -12,7 +10,16 @@ public class HexGrid : MonoBehaviour
     public Color defaultColor = Color.white;
     public Color touchedColor = Color.magenta;
 
+    public enum TerrainTypes { GRASS, PLAIN, ICE, MOUNTAIN, WATER, SIZE }
+
+    [SerializeField]
+    private int width = 6;
+    public int Width { get { return width; } private set { width = value; } }
+    [SerializeField]
+    private int height = 6;
+    public int Height { get { return height; } private set { height = value; } }
     private HexCell[] cells;
+    public HexCell[] Cells { get { return cells; } private set { cells = value; } }
     private Canvas gridCanvas;
     private HexMesh hexMesh;
 
@@ -21,6 +28,13 @@ public class HexGrid : MonoBehaviour
     {
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
+    }
+
+    public void CreateGrid(int width, int height)
+    {
+
+        Width = width;
+        Height = height;
         cells = new HexCell[height * width];
 
         for (int z = 0, i = 0; z < height; z++) {
@@ -29,10 +43,10 @@ public class HexGrid : MonoBehaviour
             }
         }
     }
-
+    
     void Start()
     {
-        hexMesh.Triangulate(cells);
+        //hexMesh.Triangulate(cells);
     }
 
 
@@ -82,6 +96,12 @@ public class HexGrid : MonoBehaviour
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+        return cells[index];
+    }
+
+    public HexCell GetCell(int offsetX, int offsetY)
+    {
+        int index = offsetX + offsetY * width + offsetY / 2;
         return cells[index];
     }
 
