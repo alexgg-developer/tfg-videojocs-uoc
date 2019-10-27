@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Unit : MonoBehaviour
 {
+#pragma warning disable 0649
     [SerializeField]
     private UnitStats unitStats;
     public int Attack { get { return unitStats.Attack; }}

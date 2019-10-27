@@ -105,6 +105,11 @@ public class HexGrid : MonoBehaviour
         return cells[index];
     }
 
+    public HexCell GetCell(int index)
+    {
+        return cells[index];
+    }
+
     public void Refresh()
     {
         hexMesh.Triangulate(cells);

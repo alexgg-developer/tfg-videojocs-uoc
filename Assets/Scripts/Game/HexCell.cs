@@ -26,7 +26,7 @@ public class HexCell : MonoBehaviour
     public RectTransform uiRect;
 
     int elevation;
-
+#pragma warning disable 0649
     [SerializeField]
     private HexCell[] neighbors;
 

@@ -4,7 +4,10 @@ using static HexGrid;
 
 public class RandomHexGridCreator : MonoBehaviour
 {
-    public HexGrid hexGrid;
+#pragma warning disable 0649
+    [SerializeField]
+    private HexGrid hexGrid;
+    public HexGrid HexGrid { get { return hexGrid; } }
     public int Width, Height;
     public int MaxElevation;
 

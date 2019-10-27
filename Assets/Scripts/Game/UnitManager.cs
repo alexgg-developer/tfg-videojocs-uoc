@@ -6,14 +6,16 @@ using static UnitStats;
 
 public class UnitManager : MonoBehaviour
 {
+#pragma warning disable 0649
     [SerializeField]
     GameObject[] unitPrefabs;
     [SerializeField]
     HexGrid grid;
+    public HexGrid Grid { get { return grid; } set { grid = value; } }
 
     List<GameObject> unitInstances = new List<GameObject>();
 
-    public void InstantiateIntialUnits()
+    public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
         /*Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(new HexCoordinates(0, 1));
         HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
@@ -30,9 +32,19 @@ public class UnitManager : MonoBehaviour
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);*/
 
-        AddUnit(new HexCoordinates(0, 1), UnitType.WARRIOR);
-        AddUnit(new HexCoordinates(0, 2), UnitType.WARRIOR);
-        AddUnit(new HexCoordinates(0, 0), UnitType.SETTLER);
+        int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
+        AddUnit(index, UnitType.WARRIOR);
+        index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
+        AddUnit(index, UnitType.SETTLER);
+    }
+
+    public void AddUnit(int index, UnitType type)
+    {
+        HexCell cell = grid.GetCell(index);
+        GameObject unitInstance = Instantiate(unitPrefabs[(int)type], cell.transform);
+        float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
+        unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
+        unitInstances.Add(unitInstance);
     }
 
     public void AddUnit(HexCoordinates hexCoordinates, UnitType type)
