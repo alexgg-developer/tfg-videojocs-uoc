@@ -35,4 +35,9 @@ public class RandomHexGridCreator : MonoBehaviour
         }
         hexGrid.Refresh();
     }
+
+    public HexCell GetCell(HexCoordinates hexCoordinates)
+    {
+        return hexGrid.GetCell(hexCoordinates.X, hexCoordinates.Z);
+    }
 }

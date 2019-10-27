@@ -6,13 +6,16 @@ using UnityEngine;
 public class Player
 {
     UnitManager unitManager;
+    CityManager cityManager;
     int score = 0;
     public int Score { get { return score; } set { score = value; } }
+    public int PlayerID { get { return unitManager.PlayerID; } set { unitManager.PlayerID = value; } }
 
 
-    public Player(UnitManager givenUnitManager)
+    public Player(UnitManager aUnitManager, CityManager aCityManager)
     {
-        this.unitManager = givenUnitManager;
+        this.unitManager = aUnitManager;
+        this.cityManager = aCityManager;
     }
 
     internal void InstantiateIntialUnits(Tuple<int, int> initialPosition)
@@ -20,8 +23,14 @@ public class Player
         unitManager.InstantiateIntialUnits(initialPosition);
     }
 
-    internal void SetGrid(HexGrid hexGrid)
+    public void SetGrid(HexGrid hexGrid)
     {
         unitManager.Grid = hexGrid;
+        cityManager.Grid = hexGrid;
+    }
+
+    public void AddCity(HexCoordinates hexCoordinates)
+    {
+        cityManager.AddCity(hexCoordinates);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ScorePanel : MonoBehaviour
@@ -8,8 +6,12 @@ public class ScorePanel : MonoBehaviour
 #pragma warning disable 0649
     [SerializeField]
     Text[] playerTexts;
+    [SerializeField]
+    Text scoreTurnText;
+#pragma warning restore 0649
     Logic logic;
     int[] lastScore;
+    //int turn = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,11 @@ public class ScorePanel : MonoBehaviour
         for (int i = 0; i < logic.NumberPlayers; ++i) {
             lastScore[i] = 0;
         }
+    }
+
+    public void OnChangeOfTurn(int newTurn)
+    {
+        scoreTurnText.text = "Scores - Turn " + newTurn;
     }
 
     // Update is called once per frame

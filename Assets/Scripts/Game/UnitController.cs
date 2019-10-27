@@ -1,21 +1,32 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UnitController : MonoBehaviour
 {
     public HexGrid hexGrid;
-
+    Logic logic;
     GameObject selectedUnit = null;
+    int currentPlayerID = 0;
     // Start is called before the first frame update
     void Start()
     {
-
+        logic = this.gameObject.GetComponent<Logic>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (selectedUnit != null) {
+            if (Input.GetKeyUp(KeyCode.B)) {
+                if(selectedUnit.GetComponent<Unit>().Type == UnitStats.UnitType.SETTLER) {
+                    if (logic.BuildCity(selectedUnit.GetComponentInParent<HexCell>().coordinates)) {
+                        Destroy(selectedUnit);
+                        selectedUnit = null;
+                    }
+                }
+            }
+        }
+
         if (!EventSystem.current.IsPointerOverGameObject()) {
             if (Input.GetMouseButtonUp(0)) {
                 Select();
@@ -41,8 +52,12 @@ public class UnitController : MonoBehaviour
                     if (cell != null && cell.gameObject.transform.childCount > 0) {
                         GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
                         Unit goalUnit = child.GetComponent<Unit>();
-                        Fight(selectedUnit.GetComponent<Unit>(), goalUnit);
-                        return;
+                        if (goalUnit != null) {
+                            if (goalUnit.PlayerID != currentPlayerID) {
+                                Fight(selectedUnit.GetComponent<Unit>(), goalUnit);
+                            }
+                            return;
+                        }
                     }
                     selectedUnit.transform.SetParent(cell.transform);
                     float offsetY = selectedUnit.GetComponent<MeshFilter>().mesh.bounds.size.y * selectedUnit.transform.localScale.y * 0.5f;
@@ -64,8 +79,11 @@ public class UnitController : MonoBehaviour
             if (cell != null && cell.gameObject.transform.childCount > 0) {
                 GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
                 if (child != null) {
-                    child.transform.Translate(3f, 0f, 0f);
-                    selectedUnit = child;
+                    Unit unit = child.GetComponent<Unit>();
+                    if (unit.PlayerID == currentPlayerID) {
+                        child.transform.Translate(3f, 0f, 0f);
+                        selectedUnit = child;
+                    }
                 }
             }
         }
@@ -79,14 +97,14 @@ public class UnitController : MonoBehaviour
         Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
         while (selectedUnit.CurrentHealth > 0 && goalUnit.CurrentHealth > 0) {
             float attackResult = UnityEngine.Random.Range(0f, 1f);
-            if(attackResult <= probabilityVictorySelected) {
+            if (attackResult <= probabilityVictorySelected) {
                 goalUnit.CurrentHealth--;
             }
             else {
                 selectedUnit.CurrentHealth--;
             }
         }
-        if(selectedUnit.CurrentHealth == 0) {
+        if (selectedUnit.CurrentHealth == 0) {
             Debug.Log("defender winner");
         }
         else {
@@ -94,7 +112,13 @@ public class UnitController : MonoBehaviour
         }
         Debug.Log(" end selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
         Debug.Log("end goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
-        selectedUnit.CurrentHealth = 10 ;
+        selectedUnit.CurrentHealth = 10;
         goalUnit.CurrentHealth = 10;
+    }
+
+    public void OnChangeOfPlayer(int newPlayerID)
+    {
+        currentPlayerID = newPlayerID;
+        selectedUnit = null;
     }
 }

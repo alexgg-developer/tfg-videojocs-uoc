@@ -99,9 +99,9 @@ public class HexGrid : MonoBehaviour
         return cells[index];
     }
 
-    public HexCell GetCell(int offsetX, int offsetY)
+    public HexCell GetCell(int coordinateX, int coordinateZ)
     {
-        int index = offsetX + offsetY * width + offsetY / 2;
+        int index = coordinateX + coordinateZ * width + coordinateZ / 2;
         return cells[index];
     }
 

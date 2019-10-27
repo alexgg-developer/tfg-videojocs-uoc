@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5213843925696320013
+--- !u!1 &6851455988003366626
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7557563924963446554}
-  - component: {fileID: 599804535233208689}
+  - component: {fileID: 2867532664156298645}
+  - component: {fileID: 1272999167217394654}
   m_Layer: 0
-  m_Name: UnitManager
+  m_Name: CityManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7557563924963446554
+--- !u!4 &2867532664156298645
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5213843925696320013}
+  m_GameObject: {fileID: 6851455988003366626}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 42.03102, y: 134.21935, z: 63.279907}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &599804535233208689
+--- !u!114 &1272999167217394654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5213843925696320013}
+  m_GameObject: {fileID: 6851455988003366626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8ed3b9d517ddbf4db5bd078c97e5871, type: 3}
+  m_Script: {fileID: 11500000, guid: 849cf0afb21b80b43af028883d0c8b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPrefabs:
-  - {fileID: 381413685760423858, guid: 75c3bfe85bec9d1469d78b0caaa9360b, type: 3}
-  - {fileID: 381413685760423858, guid: be627e29d44676746a3374a0ef5b0980, type: 3}
+  cityPrefabs:
+  - {fileID: 6729039281669771525, guid: 79ff9f7bd681af047a00a8006c86f224, type: 3}
   grid: {fileID: 0}

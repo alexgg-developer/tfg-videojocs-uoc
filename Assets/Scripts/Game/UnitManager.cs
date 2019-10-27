@@ -12,6 +12,8 @@ public class UnitManager : MonoBehaviour
     [SerializeField]
     HexGrid grid;
     public HexGrid Grid { get { return grid; } set { grid = value; } }
+    int playerID = 0;
+    public int PlayerID { get { return playerID; } set { playerID = value; } }
 
     List<GameObject> unitInstances = new List<GameObject>();
 
@@ -42,6 +44,8 @@ public class UnitManager : MonoBehaviour
     {
         HexCell cell = grid.GetCell(index);
         GameObject unitInstance = Instantiate(unitPrefabs[(int)type], cell.transform);
+        Unit unitComponent = unitInstance.GetComponent<Unit>();
+        unitComponent.PlayerID = playerID;
         float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);
