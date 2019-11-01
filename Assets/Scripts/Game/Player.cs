@@ -33,4 +33,14 @@ public class Player
     {
         cityManager.AddCity(hexCoordinates);
     }
+
+    public void ResetUnitMovement()
+    {
+        unitManager.ResetUnitMovement();
+    }
+
+    public void RemoveUnit(Unit unit)
+    {
+        unitManager.RemoveUnit(unit);
+    }
 }

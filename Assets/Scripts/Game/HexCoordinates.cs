@@ -85,4 +85,13 @@ public struct HexCoordinates
         }
         return new HexCoordinates(iX, iZ);
     }
+
+    public static int distance(HexCoordinates from, HexCoordinates to)
+    {
+        int dx = Math.Abs(from.X - to.X);
+        int dy = Math.Abs(from.Y - to.Y);
+        int dz = Math.Abs(from.Z - to.Z);
+
+        return (dx + dy + dz) / 2;
+    }
 }

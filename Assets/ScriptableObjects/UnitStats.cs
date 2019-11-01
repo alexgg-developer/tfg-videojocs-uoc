@@ -7,7 +7,7 @@ public class UnitStats : ScriptableObject
 {
     public int Attack;
     public int Defense;
-    public int Movement;
+    public float Movement;
     public int Health;
 
     public enum UnitType { WARRIOR, SETTLER, SIZE };

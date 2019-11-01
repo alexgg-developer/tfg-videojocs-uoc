@@ -19,25 +19,28 @@ public class UnitManager : MonoBehaviour
 
     public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
-        /*Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(new HexCoordinates(0, 1));
-        HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
-        //unitInstances.Add(Instantiate(unitPrefabs[(int)UnitType.WARRIOR], new Vector3(0, 0, 0), Quaternion.identity));
-        GameObject unitInstance = Instantiate(unitPrefabs[(int)UnitType.WARRIOR], cell.transform);
-        float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
-        unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
-        unitInstances.Add(unitInstance);
-
-        offsetCoordinates = HexCoordinates.ToOffsetCoordinates(new HexCoordinates(0, 0));
-        cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
-        unitInstance = Instantiate(unitPrefabs[(int)UnitType.SETTLER], cell.transform);
-        offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
-        unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
-        unitInstances.Add(unitInstance);*/
-
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
         AddUnit(index, UnitType.WARRIOR);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
         AddUnit(index, UnitType.SETTLER);
+    }
+
+    public void RemoveUnit(Unit unit)
+    {
+        for(int i = 0; i < unitInstances.Count; ++i) { 
+            Unit currentUnit = unitInstances[i].GetComponent<Unit>();
+            if(currentUnit.PlayerID == unit.PlayerID) {
+                unitInstances.RemoveAt(i);
+                break;
+            }
+         }
+    }
+
+    public void ResetUnitMovement()
+    {
+        foreach (var unitGO in unitInstances) {
+            unitGO.GetComponent<Unit>().Reset();
+        }
     }
 
     public void AddUnit(int index, UnitType type)

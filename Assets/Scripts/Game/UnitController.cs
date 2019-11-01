@@ -5,7 +5,7 @@ public class UnitController : MonoBehaviour
 {
     public HexGrid hexGrid;
     Logic logic;
-    GameObject selectedUnit = null;
+    GameObject selectedUnitGO = null;
     int currentPlayerID = 0;
     // Start is called before the first frame update
     void Start()
@@ -16,12 +16,14 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (selectedUnit != null) {
+        if (selectedUnitGO != null) {
             if (Input.GetKeyUp(KeyCode.B)) {
-                if(selectedUnit.GetComponent<Unit>().Type == UnitStats.UnitType.SETTLER) {
-                    if (logic.BuildCity(selectedUnit.GetComponentInParent<HexCell>().coordinates)) {
-                        Destroy(selectedUnit);
-                        selectedUnit = null;
+                var unit = selectedUnitGO.GetComponent<Unit>();
+                if (unit.Type == UnitStats.UnitType.SETTLER) {
+                    if (logic.BuildCity(selectedUnitGO.GetComponentInParent<HexCell>().coordinates)) {
+                        logic.RemoveUnit(unit);
+                        Destroy(selectedUnitGO);
+                        selectedUnitGO = null;
                     }
                 }
             }
@@ -40,35 +42,53 @@ public class UnitController : MonoBehaviour
 
     private void Move()
     {
-        if (selectedUnit == null) return;
+        if (selectedUnitGO == null) return;
+        Unit selectedUnit = selectedUnitGO.GetComponent<Unit>();
+        if (selectedUnit.MovementLeft < 1.0f) return;
 
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit)) {
             HexCell cell = hexGrid.GetCell(hit.point);
             if (cell != null) {
-                if (cell != selectedUnit.transform.parent) {
-                    //selectedUnit.transform = cell.transform;
-                    if (cell != null && cell.gameObject.transform.childCount > 0) {
-                        GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
-                        Unit goalUnit = child.GetComponent<Unit>();
-                        if (goalUnit != null) {
-                            if (goalUnit.PlayerID != currentPlayerID) {
-                                Fight(selectedUnit.GetComponent<Unit>(), goalUnit);
+                int distance = HexCoordinates.distance(cell.coordinates, selectedUnitGO.transform.parent.GetComponent<HexCell>().coordinates);
+                if (distance == 1) {
+                    if (cell != selectedUnitGO.transform.parent) {
+                        if (cell != null && cell.gameObject.transform.childCount > 0) {
+                            GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
+                            Unit goalUnit = child.GetComponent<Unit>();
+                            if (goalUnit != null) {
+                                if (goalUnit.PlayerID != currentPlayerID) {
+                                    if(Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit)) {
+                                        MoveUnit(selectedUnitGO, cell);
+                                        logic.RemoveUnit(goalUnit);
+                                    }
+                                    else {
+                                        logic.RemoveUnit(selectedUnit);
+                                        Destroy(selectedUnitGO);
+                                        selectedUnitGO = null;
+                                    }
+                                }
+                                return;
                             }
-                            return;
                         }
+                        MoveUnit(selectedUnitGO, cell);
                     }
-                    selectedUnit.transform.SetParent(cell.transform);
-                    float offsetY = selectedUnit.GetComponent<MeshFilter>().mesh.bounds.size.y * selectedUnit.transform.localScale.y * 0.5f;
-                    selectedUnit.transform.localPosition = new Vector3(0f, offsetY, 0f);
-                }
-                else {
-                    Debug.Log("same cell");
+                    else {
+                        Debug.Log("same cell");
+                    }
                 }
             }
         }
     }
+
+    void MoveUnit(GameObject unitToMove, HexCell cellToMoveTo)
+    {
+        unitToMove.transform.SetParent(cellToMoveTo.transform);
+        float offsetY = unitToMove.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.transform.localScale.y * 0.5f;
+        selectedUnitGO.transform.localPosition = new Vector3(0f, offsetY, 0f);
+        --unitToMove.GetComponent<Unit>().MovementLeft;
+    } 
 
     void Select()
     {
@@ -77,24 +97,26 @@ public class UnitController : MonoBehaviour
         if (Physics.Raycast(inputRay, out hit)) {
             HexCell cell = hexGrid.GetCell(hit.point);
             if (cell != null && cell.gameObject.transform.childCount > 0) {
-                GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
-                if (child != null) {
-                    Unit unit = child.GetComponent<Unit>();
-                    if (unit.PlayerID == currentPlayerID) {
-                        child.transform.Translate(3f, 0f, 0f);
-                        selectedUnit = child;
+                int childs = cell.gameObject.transform.childCount;
+                for (int i = 0; i < childs; ++i) {
+                    GameObject child = cell.gameObject.transform.GetChild(i).gameObject;
+                    Unit unit;
+                    if (child.TryGetComponent<Unit>(out unit)) {
+                        if (unit.PlayerID == currentPlayerID) {
+                            child.transform.Translate(3f, 0f, 0f);
+                            selectedUnitGO = child;
+                        }
                     }
                 }
             }
         }
     }
 
-    void Fight(Unit selectedUnit, Unit goalUnit)
+    bool Fight(Unit selectedUnit, Unit goalUnit)
     {
+        bool hasWon = false;
         int totalAttack = selectedUnit.Attack + goalUnit.Attack;
         float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
-        Debug.Log("selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
-        Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
         while (selectedUnit.CurrentHealth > 0 && goalUnit.CurrentHealth > 0) {
             float attackResult = UnityEngine.Random.Range(0f, 1f);
             if (attackResult <= probabilityVictorySelected) {
@@ -109,16 +131,17 @@ public class UnitController : MonoBehaviour
         }
         else {
             Debug.Log("attacker winner");
+            hasWon = true;
         }
-        Debug.Log(" end selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
-        Debug.Log("end goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
-        selectedUnit.CurrentHealth = 10;
-        goalUnit.CurrentHealth = 10;
+        Debug.Log("selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
+        Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
+
+        return hasWon;
     }
 
     public void OnChangeOfPlayer(int newPlayerID)
     {
         currentPlayerID = newPlayerID;
-        selectedUnit = null;
+        selectedUnitGO = null;
     }
 }

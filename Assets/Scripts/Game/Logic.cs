@@ -35,6 +35,7 @@ public class Logic : MonoBehaviour
         initialPositions[0] = new Tuple<int,int>(0, 0);
         //initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 2, gridCreator.Height - 2);
         initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 1, gridCreator.Height - 2);
+        //initialPositions[1] = new Tuple<int, int>(1, 1);
         gridCreator.CreateGrid();
         for (int i = 0; i < numberPlayers; ++i) {
             UnitManager unitManager = Instantiate(Resources.Load("UnitManager", typeof(UnitManager))) as UnitManager;
@@ -51,7 +52,8 @@ public class Logic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space)) {    
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            players[currentPlayer].ResetUnitMovement();
             ++currentPlayer;
             if (currentPlayer == numberPlayers) {
                 currentPlayer = 0;
@@ -70,6 +72,11 @@ public class Logic : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void RemoveUnit(Unit unit)
+    {
+        players[unit.PlayerID].RemoveUnit(unit);
     }
 
     private bool IsCellFree(HexCoordinates hexCoordinates)
