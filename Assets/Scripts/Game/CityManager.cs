@@ -29,8 +29,7 @@ public class CityManager : MonoBehaviour
 
     public void AddCity(HexCoordinates hexCoordinates)
     {
-        Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(hexCoordinates);
-        HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
+        HexCell cell = grid.GetCell(hexCoordinates.X, hexCoordinates.Z);
         GameObject unitInstance = Instantiate(cityPrefabs[0], cell.transform);
         float offsetY = unitInstance.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));

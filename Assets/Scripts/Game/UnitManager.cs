@@ -29,7 +29,7 @@ public class UnitManager : MonoBehaviour
     {
         for(int i = 0; i < unitInstances.Count; ++i) { 
             Unit currentUnit = unitInstances[i].GetComponent<Unit>();
-            if(currentUnit.PlayerID == unit.PlayerID) {
+            if(currentUnit.ID == unit.ID) {
                 unitInstances.RemoveAt(i);
                 break;
             }

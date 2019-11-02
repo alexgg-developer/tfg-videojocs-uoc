@@ -23,11 +23,28 @@ public class ScorePanel : MonoBehaviour
         for (int i = 0; i < logic.NumberPlayers; ++i) {
             lastScore[i] = 0;
         }
+        playerTexts[logic.CurrentPlayer].fontSize = 14;
     }
 
     public void OnChangeOfTurn(int newTurn)
     {
         scoreTurnText.text = "Scores - Turn " + newTurn;
+        for(int i = 0; i < logic.NumberPlayers; ++i) {
+            //playerTexts[i].fontStyle = FontStyle.Normal;
+            playerTexts[logic.CurrentPlayer].fontSize = 12;
+        }
+        //playerTexts[logic.CurrentPlayer].fontStyle = FontStyle.Bold;
+        playerTexts[logic.CurrentPlayer].fontSize = 14;
+    }
+
+    public void OnChangeOfPlayer(int newPlayerID)
+    {
+        for (int i = 0; i < logic.NumberPlayers; ++i) {
+            //playerTexts[i].fontStyle = FontStyle.Normal;
+            playerTexts[i].fontSize = 12;
+        }
+        //playerTexts[logic.CurrentPlayer].fontStyle = FontStyle.Bold;
+        playerTexts[newPlayerID].fontSize = 14;
     }
 
     // Update is called once per frame
@@ -35,7 +52,7 @@ public class ScorePanel : MonoBehaviour
     {
         for (int i = 0; i < logic.NumberPlayers; ++i) {
             if (lastScore[i] != logic.Players[i].Score) {
-                playerTexts[i].text = "Player " + (i+1) + ": " + logic.Players[i].Score;
+                playerTexts[i].text = "Player " + (i+1) + ": " + logic.Players[i].Score;                
             }
         }
     }

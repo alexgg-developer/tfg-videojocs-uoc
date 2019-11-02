@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static ScoreManager;
 
 [System.Serializable] public class UnityIntEvent : UnityEvent<int> { }
 
@@ -15,6 +16,8 @@ public class Logic : MonoBehaviour
     UnityIntEvent changeOfTurnEvent;
     [SerializeField]
     UnityIntEvent changeOfPlayerEvent;
+
+    public ScoreManager scoreManager;
 #pragma warning restore 0649
     private Player[] players;
     public Player[] Players { get { return players; }}
@@ -24,6 +27,7 @@ public class Logic : MonoBehaviour
     int turn = 1;
     public int Turn { get { return turn; } set { turn = value; } }
     int currentPlayer = 0;
+    public int CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
     // Start is called before the first frame update
     void Awake()
     {
@@ -47,6 +51,8 @@ public class Logic : MonoBehaviour
             players[i].InstantiateIntialUnits(initialPositions[i]);
         }
         //unitManager.InstantiateIntialUnits();
+        scoreManager = new ScoreManager(players);
+        //scoreEvent.AddListener(scoreManager.OnScoreEvent);
     }
 
     // Update is called once per frame
@@ -68,6 +74,7 @@ public class Logic : MonoBehaviour
     {
         if(IsCellFree(hexCoordinates)) {
             players[currentPlayer].AddCity(hexCoordinates);
+            scoreManager.OnScoreEvent(TypesScore.CITY, currentPlayer);
             return true;
         }
 
@@ -96,5 +103,10 @@ public class Logic : MonoBehaviour
         City city = cell.GetComponentInChildren<City>();
 
         return city != null;
+    }
+
+    public void OnScoreEvent(TypesScore type, int playerID)
+    {
+        scoreManager.OnScoreEvent(type, playerID);
     }
 }

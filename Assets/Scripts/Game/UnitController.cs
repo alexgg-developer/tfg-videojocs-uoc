@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class UnitController : MonoBehaviour
 {
+    [System.Serializable] public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
+    [SerializeField]
+    UnityScoreEvent scoreEvent;
     public HexGrid hexGrid;
     Logic logic;
     GameObject selectedUnitGO = null;
@@ -55,15 +59,18 @@ public class UnitController : MonoBehaviour
                 if (distance == 1) {
                     if (cell != selectedUnitGO.transform.parent) {
                         if (cell != null && cell.gameObject.transform.childCount > 0) {
-                            GameObject child = cell.gameObject.transform.GetChild(0).gameObject;
-                            Unit goalUnit = child.GetComponent<Unit>();
+                            GameObject goalUnitGO = cell.gameObject.transform.GetChild(0).gameObject;
+                            Unit goalUnit = goalUnitGO.GetComponent<Unit>();
                             if (goalUnit != null) {
                                 if (goalUnit.PlayerID != currentPlayerID) {
                                     if(Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit)) {
                                         MoveUnit(selectedUnitGO, cell);
+                                        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                                         logic.RemoveUnit(goalUnit);
+                                        Destroy(goalUnitGO);
                                     }
                                     else {
+                                        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
                                         logic.RemoveUnit(selectedUnit);
                                         Destroy(selectedUnitGO);
                                         selectedUnitGO = null;
