@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 
 public class UnitController : MonoBehaviour
 {
+    const float DEFENSE_BONUS_CITY = 0.5f; //50% more
     [System.Serializable] public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
     [SerializeField]
     UnityScoreEvent scoreEvent;
@@ -59,30 +60,51 @@ public class UnitController : MonoBehaviour
                 if (distance == 1) {
                     if (cell != selectedUnitGO.transform.parent) {
                         if (cell != null && cell.gameObject.transform.childCount > 0) {
-                            GameObject goalUnitGO = cell.gameObject.transform.GetChild(0).gameObject;
-                            Unit goalUnit = goalUnitGO.GetComponent<Unit>();
-                            if (goalUnit != null) {
-                                if (goalUnit.PlayerID != currentPlayerID) {
-                                    if(Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit)) {
-                                        MoveUnit(selectedUnitGO, cell);
-                                        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
-                                        logic.RemoveUnit(goalUnit);
-                                        Destroy(goalUnitGO);
-                                    }
-                                    else {
-                                        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
-                                        logic.RemoveUnit(selectedUnit);
-                                        Destroy(selectedUnitGO);
-                                        selectedUnitGO = null;
-                                    }
-                                }
-                                return;
+                            City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
+                            Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
+                            bool isDefenderInCity = goalCity != null;
+
+                            if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
+
+                            if (Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit, isDefenderInCity)) {
+                                MoveUnit(selectedUnitGO, cell);
+                                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
+                                logic.RemoveUnit(goalUnit);
+                                Destroy(goalUnit.gameObject);
                             }
+                            else {
+                                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
+                                logic.RemoveUnit(selectedUnit);
+                                Destroy(selectedUnitGO);
+                                selectedUnitGO = null;
+                            }
+                            return;
                         }
                         MoveUnit(selectedUnitGO, cell);
                     }
                     else {
                         Debug.Log("same cell");
+                    }
+                }
+                else if (distance == 2 && (selectedUnit.Type == UnitStats.UnitType.ARCHER || selectedUnit.Type == UnitStats.UnitType.CATAPULT)) {
+                    //GameObject goalUnitGO = cell.gameObject.transform.GetChild(0).gameObject;
+                    City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
+                    Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
+                    bool isDefenderInCity = goalCity != null;
+
+                    if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
+
+                    bool isDead = false;
+                    if (selectedUnit.Type == UnitStats.UnitType.CATAPULT && isDefenderInCity) {
+                        isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
+                    }
+                    else {
+                        isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
+                    }
+                    if(isDead) {
+                        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
+                        logic.RemoveUnit(goalUnit);
+                        Destroy(goalUnit.gameObject);
                     }
                 }
             }
@@ -119,20 +141,15 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    bool Fight(Unit selectedUnit, Unit goalUnit)
+    bool Fight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
     {
         bool hasWon = false;
-        int totalAttack = selectedUnit.Attack + goalUnit.Attack;
-        float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
+        selectedUnit.HasAttacked = true;
+
         while (selectedUnit.CurrentHealth > 0 && goalUnit.CurrentHealth > 0) {
-            float attackResult = UnityEngine.Random.Range(0f, 1f);
-            if (attackResult <= probabilityVictorySelected) {
-                goalUnit.CurrentHealth--;
-            }
-            else {
-                selectedUnit.CurrentHealth--;
-            }
+            Attack(selectedUnit, goalUnit, isDefenderInCity, false);
         }
+
         if (selectedUnit.CurrentHealth == 0) {
             Debug.Log("defender winner");
         }
@@ -144,6 +161,30 @@ public class UnitController : MonoBehaviour
         Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
 
         return hasWon;
+    }
+
+    bool DistanceFight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
+    {
+        selectedUnit.HasAttacked = true;
+        //3 attacks
+        for (int i = 0; i < 3; ++i) {
+            Attack(selectedUnit, goalUnit, isDefenderInCity, true);
+        }
+
+        return goalUnit.CurrentHealth <= 0.0f;
+    }
+
+    void Attack(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, bool distanceAttack)
+    {
+        float totalAttack = selectedUnit.Attack + (goalUnit.Defense + goalUnit.Defense * 0.5f);
+        float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
+        float attackResult = UnityEngine.Random.Range(0f, 1f);
+        if (attackResult <= probabilityVictorySelected) {
+            goalUnit.CurrentHealth--;
+        }
+        else if(!distanceAttack) {
+            selectedUnit.CurrentHealth--;
+        }
     }
 
     public void OnChangeOfPlayer(int newPlayerID)

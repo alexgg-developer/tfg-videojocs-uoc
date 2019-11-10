@@ -23,6 +23,8 @@ public class UnitManager : MonoBehaviour
         AddUnit(index, UnitType.WARRIOR);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
         AddUnit(index, UnitType.SETTLER);
+        index = initialPosition.Item1 + (initialPosition.Item2 + 2) * grid.Width;
+        AddUnit(index, UnitType.HORSEMAN);
     }
 
     public void RemoveUnit(Unit unit)

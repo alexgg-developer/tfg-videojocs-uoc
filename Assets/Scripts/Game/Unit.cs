@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnitStats;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+//[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Unit : MonoBehaviour
 {
 #pragma warning disable 0649
@@ -15,7 +15,8 @@ public class Unit : MonoBehaviour
     private int id;
     public int ID { get { return id; } set { id = value; } }
 
-    public int Attack { get { return unitStats.Attack; } }
+    public float Attack { get { return unitStats.Attack; } }
+    public float Defense { get { return unitStats.Defense; } }
     public UnitType Type { get { return unitStats.Type; } }
     private Vector3 gridPosition = new Vector3(0f, 0f, 0f);
     private int currentHealth;
@@ -23,7 +24,9 @@ public class Unit : MonoBehaviour
     private int playerID;
     public int PlayerID { get { return playerID; } set { playerID = value; } }
     private float movementLeft;
-    public float MovementLeft { get { return movementLeft; } set { movementLeft = value; } }
+    public float MovementLeft { get { return movementLeft; } set { movementLeft = value; } }    
+    private bool hasAttacked = false;
+    public bool HasAttacked { get { return hasAttacked; } set { hasAttacked = value; } }
 
     void Awake()
     {
@@ -39,6 +42,7 @@ public class Unit : MonoBehaviour
     public void Reset()
     {
         movementLeft = unitStats.Movement;
+        hasAttacked = false;
     }
 }
 
