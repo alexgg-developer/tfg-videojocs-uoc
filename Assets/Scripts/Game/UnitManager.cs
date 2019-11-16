@@ -20,11 +20,13 @@ public class UnitManager : MonoBehaviour
     public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
-        AddUnit(index, UnitType.WARRIOR);
+        //AddUnit(index, UnitType.WARRIOR);
+        AddUnit(index, UnitType.ARCHER);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
-        AddUnit(index, UnitType.SETTLER);
-        index = initialPosition.Item1 + (initialPosition.Item2 + 2) * grid.Width;
-        AddUnit(index, UnitType.HORSEMAN);
+        //AddUnit(index, UnitType.SETTLER);
+        AddUnit(index, UnitType.CATAPULT);
+        /*index = initialPosition.Item1 + (initialPosition.Item2 + 2) * grid.Width;
+        AddUnit(index, UnitType.HORSEMAN);*/
     }
 
     public void RemoveUnit(Unit unit)

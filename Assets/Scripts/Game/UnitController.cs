@@ -49,7 +49,6 @@ public class UnitController : MonoBehaviour
     {
         if (selectedUnitGO == null) return;
         Unit selectedUnit = selectedUnitGO.GetComponent<Unit>();
-        if (selectedUnit.MovementLeft < 1.0f) return;
 
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -58,6 +57,8 @@ public class UnitController : MonoBehaviour
             if (cell != null) {
                 int distance = HexCoordinates.distance(cell.coordinates, selectedUnitGO.transform.parent.GetComponent<HexCell>().coordinates);
                 if (distance == 1) {
+                    if (selectedUnit.MovementLeft < 1.0f) return;
+
                     if (cell != selectedUnitGO.transform.parent) {
                         if (cell != null && cell.gameObject.transform.childCount > 0) {
                             City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
@@ -167,16 +168,19 @@ public class UnitController : MonoBehaviour
     {
         selectedUnit.HasAttacked = true;
         //3 attacks
-        for (int i = 0; i < 3; ++i) {
+        bool goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
+        for (int i = 0; i < 300 && !goalUnitIsDead; ++i) {
             Attack(selectedUnit, goalUnit, isDefenderInCity, true);
+            goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
         }
 
-        return goalUnit.CurrentHealth <= 0.0f;
+        return goalUnitIsDead;
     }
 
     void Attack(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, bool distanceAttack)
     {
-        float totalAttack = selectedUnit.Attack + (goalUnit.Defense + goalUnit.Defense * 0.5f);
+        float bonusCity = isDefenderInCity ? goalUnit.Defense * 0.5f : 0.0f;
+        float totalAttack = selectedUnit.Attack + (goalUnit.Defense + bonusCity);
         float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
         float attackResult = UnityEngine.Random.Range(0f, 1f);
         if (attackResult <= probabilityVictorySelected) {
@@ -185,6 +189,9 @@ public class UnitController : MonoBehaviour
         else if(!distanceAttack) {
             selectedUnit.CurrentHealth--;
         }
+        /*Debug.Log("attackResult::" + attackResult);
+        Debug.Log("selectedUnit.CurrentHealth::" + selectedUnit.CurrentHealth);
+        Debug.Log("goalUnit.CurrentHealth::" + goalUnit.CurrentHealth);*/
     }
 
     public void OnChangeOfPlayer(int newPlayerID)
