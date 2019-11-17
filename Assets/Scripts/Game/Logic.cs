@@ -15,7 +15,7 @@ public class Logic : MonoBehaviour
     [SerializeField]
     UnityIntEvent changeOfTurnEvent;
     [SerializeField]
-    UnityIntEvent changeOfPlayerEvent;
+    UnityIntEvent changeOfPlayerEvent;    
 
     public ScoreManager scoreManager;
 #pragma warning restore 0649
@@ -28,11 +28,12 @@ public class Logic : MonoBehaviour
     public int Turn { get { return turn; } set { turn = value; } }
     int currentPlayer = 0;
     public int CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
+
     // Start is called before the first frame update
     void Awake()
     {
         //TO DO:
-		//numberPlayers = PlayerPrefs.GetInt("NumberPlayers");
+        //numberPlayers = PlayerPrefs.GetInt("NumberPlayers");
         numberPlayers = 2;
         players = new Player[numberPlayers];
         initialPositions = new Tuple<int, int>[numberPlayers];

@@ -63,11 +63,13 @@ public class UnitController : MonoBehaviour
                         if (cell != null && cell.gameObject.transform.childCount > 0) {
                             City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
                             Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
-                            bool isDefenderInCity = goalCity != null;
+                            bool thereIsCity = goalCity != null;
+                            if (thereIsCity && goalCity.PlayerID == currentPlayerID && goalUnit == null) {
+                                MoveUnit(selectedUnitGO, cell);
+                            }
 
                             if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
-
-                            if (Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit, isDefenderInCity)) {
+                            if (Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity)) {
                                 MoveUnit(selectedUnitGO, cell);
                                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                                 logic.RemoveUnit(goalUnit);
@@ -81,7 +83,9 @@ public class UnitController : MonoBehaviour
                             }
                             return;
                         }
-                        MoveUnit(selectedUnitGO, cell);
+                        else {
+                            MoveUnit(selectedUnitGO, cell);
+                        }
                     }
                     else {
                         Debug.Log("same cell");
@@ -117,7 +121,10 @@ public class UnitController : MonoBehaviour
         unitToMove.transform.SetParent(cellToMoveTo.transform);
         float offsetY = unitToMove.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.transform.localScale.y * 0.5f;
         selectedUnitGO.transform.localPosition = new Vector3(0f, offsetY, 0f);
-        --unitToMove.GetComponent<Unit>().MovementLeft;
+        var unit = unitToMove.GetComponent<Unit>();
+        --unit.MovementLeft;
+        unit.OnNewPosition();
+
     } 
 
     void Select()
@@ -169,7 +176,7 @@ public class UnitController : MonoBehaviour
         selectedUnit.HasAttacked = true;
         //3 attacks
         bool goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
-        for (int i = 0; i < 300 && !goalUnitIsDead; ++i) {
+        for (int i = 0; i < 3 && !goalUnitIsDead; ++i) {
             Attack(selectedUnit, goalUnit, isDefenderInCity, true);
             goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
         }
@@ -180,6 +187,7 @@ public class UnitController : MonoBehaviour
     void Attack(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, bool distanceAttack)
     {
         float bonusCity = isDefenderInCity ? goalUnit.Defense * 0.5f : 0.0f;
+        bonusCity = selectedUnit.Type == UnitStats.UnitType.CATAPULT ? 0.0f : bonusCity;
         float totalAttack = selectedUnit.Attack + (goalUnit.Defense + bonusCity);
         float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
         float attackResult = UnityEngine.Random.Range(0f, 1f);
@@ -191,7 +199,10 @@ public class UnitController : MonoBehaviour
         }
         /*Debug.Log("attackResult::" + attackResult);
         Debug.Log("selectedUnit.CurrentHealth::" + selectedUnit.CurrentHealth);
-        Debug.Log("goalUnit.CurrentHealth::" + goalUnit.CurrentHealth);*/
+        Debug.Log("goalUnit.CurrentHealth::" + goalUnit.CurrentHealth);
+        Debug.Log("isDefenderInCity::" + isDefenderInCity);
+        Debug.Log("bonusCity::" + bonusCity);*/
+
     }
 
     public void OnChangeOfPlayer(int newPlayerID)

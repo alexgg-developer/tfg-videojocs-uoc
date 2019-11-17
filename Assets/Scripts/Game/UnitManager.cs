@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnitStats;
 
 public class UnitManager : MonoBehaviour
@@ -11,20 +12,31 @@ public class UnitManager : MonoBehaviour
     GameObject[] unitPrefabs;
     [SerializeField]
     HexGrid grid;
+    [SerializeField]
+    private Text healthStatsPrefab;
+
     public HexGrid Grid { get { return grid; } set { grid = value; } }
     int playerID = 0;
     public int PlayerID { get { return playerID; } set { playerID = value; } }
 
     List<GameObject> unitInstances = new List<GameObject>();
+    private Canvas unitCanvas;
+
+    public void Awake()
+    {
+
+        unitCanvas = GetComponentInChildren<Canvas>();
+    }
 
     public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
         //AddUnit(index, UnitType.WARRIOR);
-        AddUnit(index, UnitType.ARCHER);
-        index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
-        //AddUnit(index, UnitType.SETTLER);
+        //AddUnit(index, UnitType.ARCHER);
         AddUnit(index, UnitType.CATAPULT);
+        index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
+        AddUnit(index, UnitType.SETTLER);
+        //AddUnit(index, UnitType.CATAPULT);
         /*index = initialPosition.Item1 + (initialPosition.Item2 + 2) * grid.Width;
         AddUnit(index, UnitType.HORSEMAN);*/
     }
@@ -56,6 +68,13 @@ public class UnitManager : MonoBehaviour
         float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);
+
+        Text label = Instantiate<Text>(healthStatsPrefab);
+        label.rectTransform.SetParent(unitCanvas.transform, false);
+        unitComponent.HealthStatus = label;
+        unitComponent.OnNewPosition();
+
+
     }
 
     public void AddUnit(HexCoordinates hexCoordinates, UnitType type)
@@ -67,4 +86,6 @@ public class UnitManager : MonoBehaviour
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);
     }
+
+
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f59e09d8f4d152f429ae2503b404a7f6, type: 3}
   m_Name: CatapultStats
   m_EditorClassIdentifier: 
-  Attack: 2
+  Attack: 1.5
   Defense: 0
   Movement: 1
   Health: 10

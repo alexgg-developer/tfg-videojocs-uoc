@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnitStats;
 
 //[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -20,13 +21,22 @@ public class Unit : MonoBehaviour
     public UnitType Type { get { return unitStats.Type; } }
     private Vector3 gridPosition = new Vector3(0f, 0f, 0f);
     private int currentHealth;
-    public int CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
+    public int CurrentHealth {
+        get { return currentHealth; }
+        set {
+            currentHealth = value;
+            healthStatus.text = currentHealth + "/" + unitStats.Health;
+        }
+    }
     private int playerID;
     public int PlayerID { get { return playerID; } set { playerID = value; } }
     private float movementLeft;
     public float MovementLeft { get { return movementLeft; } set { movementLeft = value; } }    
     private bool hasAttacked = false;
     public bool HasAttacked { get { return hasAttacked; } set { hasAttacked = value; } }
+
+    private Text healthStatus;
+    public Text HealthStatus { get { return healthStatus; } set { healthStatus = value; } }
 
     void Awake()
     {
@@ -35,7 +45,7 @@ public class Unit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = unitStats.Health;
+        CurrentHealth = unitStats.Health;
         movementLeft = unitStats.Movement;
     }
 
@@ -43,6 +53,18 @@ public class Unit : MonoBehaviour
     {
         movementLeft = unitStats.Movement;
         hasAttacked = false;
+    }
+
+    public void OnNewPosition()
+    {
+        float offsetX = gameObject.GetComponent<MeshFilter>().mesh.bounds.size.x * gameObject.transform.localScale.x * 0.25f;
+        float offsetY = gameObject.GetComponent<MeshFilter>().mesh.bounds.size.y * gameObject.transform.localScale.y * 2.5f;
+        healthStatus.transform.position = new Vector3(gameObject.transform.position.x + offsetX, gameObject.transform.position.y + offsetY, gameObject.transform.position.z);        
+    }
+
+    private void OnDestroy()
+    {
+        GameObject.Destroy(healthStatus);
     }
 }
 

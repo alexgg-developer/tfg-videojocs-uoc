@@ -69,6 +69,7 @@ public class HexGrid : MonoBehaviour
             new Vector2(position.x, position.z);
         //label.text = x.ToString() + "\n" + z.ToString();
         label.text = cell.coordinates.ToStringOnSeparateLines();
+        cell.uiRect = label.rectTransform;
 
         if (x > 0) {
             cell.SetNeighbor(HexDirection.W, cells[i - 1]);
@@ -88,7 +89,6 @@ public class HexGrid : MonoBehaviour
                 }
             }
         }
-        cell.uiRect = label.rectTransform;
     }
 
     public HexCell GetCell(Vector3 position)
