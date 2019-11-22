@@ -68,7 +68,9 @@ public class UnitController : MonoBehaviour
                                 MoveUnit(selectedUnitGO, cell);
                             }
 
-                            if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
+                            if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
+                            if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT) return;
+
                             if (Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity)) {
                                 MoveUnit(selectedUnitGO, cell);
                                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);

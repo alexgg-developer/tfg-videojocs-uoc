@@ -7,6 +7,8 @@ public class Player
 {
     UnitManager unitManager;
     CityManager cityManager;
+    uint shields = 0;
+    public uint Shields { get { return shields; } set { shields = value; } }
     int score = 0;
     public int Score { get { return score; } set { score = value; } }
     public int PlayerID { get { return unitManager.PlayerID; } set { unitManager.PlayerID = value; } }
@@ -42,5 +44,15 @@ public class Player
     public void RemoveUnit(Unit unit)
     {
         unitManager.RemoveUnit(unit);
+    }
+
+    public uint CalculateShieldsPerTurn()
+    {
+        return cityManager.CalculateShieldsPerTurn();
+    }
+
+    public void ProduceShields()
+    {
+        Shields += CalculateShieldsPerTurn();
     }
 }

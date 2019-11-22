@@ -56,17 +56,23 @@ public class Logic : MonoBehaviour
         //scoreEvent.AddListener(scoreManager.OnScoreEvent);
     }
 
+    private void Start()
+    {
+        changeOfPlayerEvent.Invoke(currentPlayer);
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space)) {
-            players[currentPlayer].ResetUnitMovement();
             ++currentPlayer;
             if (currentPlayer == numberPlayers) {
                 currentPlayer = 0;
                 ++turn;
                 changeOfTurnEvent.Invoke(turn);
             }
+            players[currentPlayer].ResetUnitMovement();
+            players[currentPlayer].ProduceShields();
             changeOfPlayerEvent.Invoke(currentPlayer);
         }
     }
