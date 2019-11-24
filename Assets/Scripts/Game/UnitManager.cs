@@ -32,8 +32,8 @@ public class UnitManager : MonoBehaviour
     {
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
         //AddUnit(index, UnitType.WARRIOR);
-        //AddUnit(index, UnitType.ARCHER);
-        AddUnit(index, UnitType.CATAPULT);
+        AddUnit(index, UnitType.ARCHER);
+        //AddUnit(index, UnitType.CATAPULT);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
         AddUnit(index, UnitType.SETTLER);
         //AddUnit(index, UnitType.CATAPULT);
@@ -62,6 +62,18 @@ public class UnitManager : MonoBehaviour
     public void AddUnit(int index, UnitType type)
     {
         HexCell cell = grid.GetCell(index);
+        AddUnitInCell(cell, type);
+    }
+
+    public void AddUnit(HexCoordinates hexCoordinates, UnitType type)
+    {
+        Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(hexCoordinates);
+        HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
+        AddUnitInCell(cell, type);
+    }
+
+    public void AddUnitInCell(HexCell cell, UnitType type)
+    {
         GameObject unitInstance = Instantiate(unitPrefabs[(int)type], cell.transform);
         Unit unitComponent = unitInstance.GetComponent<Unit>();
         unitComponent.PlayerID = playerID;
@@ -73,19 +85,8 @@ public class UnitManager : MonoBehaviour
         label.rectTransform.SetParent(unitCanvas.transform, false);
         unitComponent.HealthStatus = label;
         unitComponent.OnNewPosition();
-
-
     }
 
-    public void AddUnit(HexCoordinates hexCoordinates, UnitType type)
-    {
-        Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(hexCoordinates);
-        HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
-        GameObject unitInstance = Instantiate(unitPrefabs[(int)type], cell.transform);
-        float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
-        unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
-        unitInstances.Add(unitInstance);
-    }
 
 
 }

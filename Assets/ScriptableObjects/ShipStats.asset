@@ -16,4 +16,6 @@ MonoBehaviour:
   Defense: 1
   Movement: 2
   Health: 10
+  Description: Ships can only navigate through water and only attack other ships.
+  ShieldCost: 6
   Type: 3

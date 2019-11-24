@@ -7,7 +7,8 @@ public class Player
 {
     UnitManager unitManager;
     CityManager cityManager;
-    uint shields = 0;
+    //uint shields = 0;
+    uint shields = 20;
     public uint Shields { get { return shields; } set { shields = value; } }
     int score = 0;
     public int Score { get { return score; } set { score = value; } }
@@ -54,5 +55,10 @@ public class Player
     public void ProduceShields()
     {
         Shields += CalculateShieldsPerTurn();
+    }
+
+    internal void AddUnit(UnitStats.UnitType unitType, HexCoordinates hexCoordinates)
+    {
+        unitManager.AddUnit(hexCoordinates, unitType);
     }
 }

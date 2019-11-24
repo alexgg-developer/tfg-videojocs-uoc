@@ -16,4 +16,7 @@ MonoBehaviour:
   Defense: 1
   Movement: 1
   Health: 10
+  Icon: battle-axe
+  Description: Cheap unit that attacks adjacent units.
+  ShieldCost: 2
   Type: 0

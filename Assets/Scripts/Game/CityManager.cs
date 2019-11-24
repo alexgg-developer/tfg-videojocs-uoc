@@ -33,6 +33,7 @@ public class CityManager : MonoBehaviour
     {
         GameObject cityInstance = Instantiate(cityPrefabs[0], cell.transform);
         City cityComponent = cityInstance.GetComponent<City>();
+        cityComponent.Name = "City " + (cities.Count + 1);
         cityComponent.PlayerID = playerID;
         float offsetY = cityInstance.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * cityInstance.transform.localScale.y * 0.5f;
         cityInstance.transform.Translate(new Vector3(0f, offsetY, 0f));

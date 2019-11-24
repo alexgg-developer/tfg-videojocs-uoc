@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -8,44 +9,20 @@ public class UnitController : MonoBehaviour
     [System.Serializable] public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
     [SerializeField]
     UnityScoreEvent scoreEvent;
-    public HexGrid hexGrid;
+    [SerializeField]
+    HexGrid hexGrid;
     Logic logic;
     GameObject selectedUnitGO = null;
     int currentPlayerID = 0;
+
+    
     // Start is called before the first frame update
     void Start()
     {
         logic = this.gameObject.GetComponent<Logic>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (selectedUnitGO != null) {
-            if (Input.GetKeyUp(KeyCode.B)) {
-                var unit = selectedUnitGO.GetComponent<Unit>();
-                if (unit.Type == UnitStats.UnitType.SETTLER) {
-                    if (logic.BuildCity(selectedUnitGO.GetComponentInParent<HexCell>().coordinates)) {
-                        logic.RemoveUnit(unit);
-                        Destroy(selectedUnitGO);
-                        selectedUnitGO = null;
-                    }
-                }
-            }
-        }
-
-        if (!EventSystem.current.IsPointerOverGameObject()) {
-            if (Input.GetMouseButtonUp(0)) {
-                Select();
-            }
-            else if (Input.GetMouseButtonUp(1)) {
-                Move();
-            }
-        }
-        //GameObject child = originalGameObject.transform.GetChild(0).gameObject;
-    }
-
-    private void Move()
+    public void Move()
     {
         if (selectedUnitGO == null) return;
         Unit selectedUnit = selectedUnitGO.GetComponent<Unit>();
@@ -118,6 +95,11 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void Unselect()
+    {
+        selectedUnitGO = null;
+    }
+
     void MoveUnit(GameObject unitToMove, HexCell cellToMoveTo)
     {
         unitToMove.transform.SetParent(cellToMoveTo.transform);
@@ -129,7 +111,7 @@ public class UnitController : MonoBehaviour
 
     } 
 
-    void Select()
+    public void Select()
     {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -212,4 +194,18 @@ public class UnitController : MonoBehaviour
         currentPlayerID = newPlayerID;
         selectedUnitGO = null;
     }
+
+    public void SettlerCommand()
+    {
+        if (selectedUnitGO == null) return;
+        var unit = selectedUnitGO.GetComponent<Unit>();
+        if (unit.Type == UnitStats.UnitType.SETTLER) {
+            if (logic.BuildCity(selectedUnitGO.GetComponentInParent<HexCell>().coordinates)) {
+                logic.RemoveUnit(unit);
+                Destroy(selectedUnitGO);
+                selectedUnitGO = null;
+            }
+        }
+    }
+
 }

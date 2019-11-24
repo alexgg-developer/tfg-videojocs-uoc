@@ -88,6 +88,24 @@ public class Logic : MonoBehaviour
         return false;
     }
 
+    internal bool TryBuildingUnit(UnitStats.UnitType unitType, City city)
+    {
+        var hexCoordinates = city.gameObject.GetComponentInParent<HexCell>().coordinates;
+        if(!IsThereUnit(hexCoordinates)) {
+            players[currentPlayer].AddUnit(unitType, hexCoordinates);
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsThereUnit(HexCoordinates hexCoordinates)
+    {
+        HexCell cell = gridCreator.GetCell(hexCoordinates);
+        Unit unit = cell.GetComponentInChildren<Unit>();
+
+        return unit != null;
+    }
+
     public void RemoveUnit(Unit unit)
     {
         players[unit.PlayerID].RemoveUnit(unit);
@@ -95,13 +113,21 @@ public class Logic : MonoBehaviour
 
     private bool IsCellFree(HexCoordinates hexCoordinates)
     {
-        /*bool isFree = true;
-        for(int i = 0; i < numberPlayers && isFree; ++i) {
-            isFree = IsThereCityAt(hexCoordinates);
-        }
-
-        return isFree;*/
         return !IsThereCityAt(hexCoordinates);
+    }
+
+    internal bool TrySpendShields(uint shieldCost)
+    {
+        if(players[currentPlayer].Shields >= shieldCost) {
+            players[currentPlayer].Shields -= shieldCost;
+            return true;
+        }
+        return false;
+    }
+
+    internal bool IsThereEnoughShields(uint shieldCost)
+    {
+       return players[currentPlayer].Shields >= shieldCost;
     }
 
     private bool IsThereCityAt(HexCoordinates hexCoordinates)

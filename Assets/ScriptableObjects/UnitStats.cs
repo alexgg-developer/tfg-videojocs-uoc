@@ -9,6 +9,9 @@ public class UnitStats : ScriptableObject
     public float Defense;
     public float Movement;
     public int Health;
+    public string Icon;
+    public string Description;
+    public uint ShieldCost;
 
     public enum UnitType { WARRIOR, SETTLER, HORSEMAN, SHIP, ARCHER, CATAPULT, SIZE };
     public UnitType Type;

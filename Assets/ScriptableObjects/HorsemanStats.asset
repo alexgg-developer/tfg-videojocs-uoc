@@ -16,4 +16,7 @@ MonoBehaviour:
   Defense: 1
   Movement: 2
   Health: 10
+  Icon: cavalry
+  Description: Special unit that can move faster.
+  ShieldCost: 4
   Type: 2
