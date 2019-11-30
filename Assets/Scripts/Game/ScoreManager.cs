@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScoreManager
 {
-    public enum TypesScore { CITY, FIGHT, FIGHT_CITY, SIZE }
+    public enum TypesScore { CITY, FIGHT, FIGHT_CITY, TECHNOLOGY, SIZE }
     int[] scores;
 
     Player[] players;
@@ -16,6 +16,7 @@ public class ScoreManager
         scores[0] = 100;
         scores[1] = 10;
         scores[2] = 300;
+        scores[3] = 500;
     }
 
     public void OnNewCity(int playerID)
@@ -33,4 +34,5 @@ public class ScoreManager
     {
         players[playerID].Score += scores[(int)type];
     }
+
 }

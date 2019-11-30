@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static BuildingInfo;
+using static TechnologyInfo;
 using static UnitStats;
 
 public class CityPanel : MonoBehaviour
@@ -32,6 +35,8 @@ public class CityPanel : MonoBehaviour
     UnitStats[] unitStats;
     [SerializeField]
     BuildingInfo[] buildingInfos;
+    [SerializeField]
+    UnityEvent OnOpenEvent;
 #pragma warning restore 0649
     const uint TOTAL_BUY_BUTTONS = 6;
     const string NOT_ENOUGH_SHIELDS = "Not enough shields.";
@@ -45,16 +50,12 @@ public class CityPanel : MonoBehaviour
 
     List<UnitType> unitsAvailable = new List<UnitType>();
     List<BuildingType> buildingsAvailable = new List<BuildingType>();
-    Dictionary<UnitType, Sprite> unitSprites = new Dictionary<UnitType, Sprite>();
-    Dictionary<BuildingType, Sprite> buildingSprites = new Dictionary<BuildingType, Sprite>();
 
 
     private void Awake()
     {
-        unitsAvailable.Add(UnitType.WARRIOR);
-        unitsAvailable.Add(UnitType.SETTLER);
 
-        buildingsAvailable.Add(BuildingType.BARN);
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
 
         //ShowUnitButtons();
     }
@@ -62,11 +63,13 @@ public class CityPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
     }
 
     private void OnEnable()
     {
+        SetUnitAvailability();
+        SetBuildingAvailability();        
+
         cityNameText.text = selectedCity.Name;
         shieldPerTurnText.text = selectedCity.ShieldsPerTurn().ToString() + " shields per turn";
         populationText.text = selectedCity.Population.ToString() + " population";
@@ -76,6 +79,39 @@ public class CityPanel : MonoBehaviour
         else {
             ShowBuildingButtons();
         }
+        OnOpenEvent.Invoke();
+    }
+
+    private void SetBuildingAvailability()
+    {
+        //buildingsAvailable.Add(BuildingType.BARN);
+        buildingsAvailable.Clear();
+        if (logic.HasTechnology(TechnologyType.AGRICULTURE)) {
+            buildingsAvailable.Add(BuildingType.BARN);
+        }
+        if (logic.HasTechnology(TechnologyType.NAVIGATION)) {
+            buildingsAvailable.Add(BuildingType.DOCK);
+        }
+        if (logic.HasTechnology(TechnologyType.ENGINEERING)) {
+            buildingsAvailable.Add(BuildingType.WALL);
+        }
+    }
+
+    private void SetUnitAvailability()
+    {
+        unitsAvailable.Clear();
+        unitsAvailable.Add(UnitType.WARRIOR);
+        unitsAvailable.Add(UnitType.SETTLER);
+        if (logic.HasTechnology(TechnologyType.AGRICULTURE)) {
+            unitsAvailable.Add(UnitType.HORSEMAN);
+        }
+        if (logic.HasTechnology(TechnologyType.NAVIGATION)) {
+            unitsAvailable.Add(UnitType.SHIP);
+        }
+        if (logic.HasTechnology(TechnologyType.ENGINEERING)) {
+            unitsAvailable.Add(UnitType.CATAPULT);
+            unitsAvailable.Add(UnitType.ARCHER);
+        }
     }
 
     private void OnDisable() 
@@ -84,15 +120,7 @@ public class CityPanel : MonoBehaviour
         selectedButton = -1;
         descriptionSelectedPanel.SetActive(false);
     }
-
-    public void OnChangeOfTurn(int newTurn)
-    {
-    }
-
-    public void OnChangeOfPlayer(int newPlayerID)
-    {
-    }
-
+    
     public void OnClickedBuyButton(int index)
     {
         if (showUnits) {

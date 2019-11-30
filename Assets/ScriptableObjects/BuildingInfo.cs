@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Buildings/BuildingInfo")]
+[CreateAssetMenu(menuName = "CustomScriptableObjects/BuildingInfo")]
 public class BuildingInfo : ScriptableObject
 {
     public string Icon;

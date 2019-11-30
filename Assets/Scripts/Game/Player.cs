@@ -2,23 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static TechnologyInfo;
 
 public class Player
 {
     UnitManager unitManager;
     CityManager cityManager;
+    TechnologyManager technologyManager;
     //uint shields = 0;
-    uint shields = 20;
+    uint shields = 200;
     public uint Shields { get { return shields; } set { shields = value; } }
     int score = 0;
     public int Score { get { return score; } set { score = value; } }
     public int PlayerID { get { return unitManager.PlayerID; } set { unitManager.PlayerID = value; } }
 
 
-    public Player(UnitManager aUnitManager, CityManager aCityManager)
+    public Player(UnitManager aUnitManager, CityManager aCityManager, TechnologyManager aTechnologyManager)
     {
         this.unitManager = aUnitManager;
         this.cityManager = aCityManager;
+        this.technologyManager = aTechnologyManager;
     }
 
     internal void InstantiateIntialUnits(Tuple<int, int> initialPosition)
@@ -70,5 +73,15 @@ public class Player
     internal void TransferCity(City city)
     {
         cityManager.TransferCity(city);
+    }
+
+    internal void AddTechnology(TechnologyType technology)
+    {
+        technologyManager.Add(technology);
+    }
+
+    internal bool HasTechnology(TechnologyType technologyType)
+    {
+        return technologyManager.HasTechnology(technologyType);
     }
 }

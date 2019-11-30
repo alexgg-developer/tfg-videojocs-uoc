@@ -9,14 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f59e09d8f4d152f429ae2503b404a7f6, type: 3}
-  m_Name: ShipStats
+  m_Script: {fileID: 11500000, guid: b26681c9a05d90543ab07ded752d0710, type: 3}
+  m_Name: Engineering
   m_EditorClassIdentifier: 
-  Attack: 1
-  Defense: 1
-  Movement: 2
-  Health: 10
-  Icon: sailboat
-  Description: Ships can only navigate through water and only attack other ships.
-  ShieldCost: 6
-  Type: 3
+  Icon: gear-hammer
+  Description: It lets you build catapults and wall. Moreover you can train archers.
+  ShieldCost: 40
+  Type: 2

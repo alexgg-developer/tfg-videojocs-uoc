@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "GameUnits/UnitStats")]
+[CreateAssetMenu(menuName = "CustomScriptableObjects/UnitStats")]
 public class UnitStats : ScriptableObject
 {
     public float Attack;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using static ScoreManager;
+using static TechnologyInfo;
 
 [System.Serializable] public class UnityIntEvent : UnityEvent<int> { }
 
@@ -46,14 +47,22 @@ public class Logic : MonoBehaviour
             UnitManager unitManager = Instantiate(Resources.Load("UnitManager", typeof(UnitManager))) as UnitManager;
             unitManager.PlayerID = i;
             CityManager cityManager = Instantiate(Resources.Load("CityManager", typeof(CityManager))) as CityManager;
-            cityManager.PlayerID = i;   
-            players[i] = new Player(unitManager, cityManager);
+            cityManager.PlayerID = i;
+            TechnologyManager technologyManager = new TechnologyManager();
+
+            players[i] = new Player(unitManager, cityManager, technologyManager);
             players[i].SetGrid(gridCreator.HexGrid);
             players[i].InstantiateIntialUnits(initialPositions[i]);
         }
         //unitManager.InstantiateIntialUnits();
         scoreManager = new ScoreManager(players);
         //scoreEvent.AddListener(scoreManager.OnScoreEvent);
+    }
+
+    internal void AddTechnology(TechnologyType technologyType)
+    {
+        players[currentPlayer].AddTechnology(technologyType);
+        OnScoreEvent(TypesScore.TECHNOLOGY, currentPlayer);
     }
 
     private void Start()
@@ -75,6 +84,11 @@ public class Logic : MonoBehaviour
             players[currentPlayer].ProduceShields();
             changeOfPlayerEvent.Invoke(currentPlayer);
         }
+    }
+
+    internal bool HasTechnology(TechnologyType technologyType)
+    {
+        return players[currentPlayer].HasTechnology(technologyType);
     }
 
     public bool BuildCity(HexCoordinates hexCoordinates)

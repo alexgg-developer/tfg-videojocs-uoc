@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class UnitController : MonoBehaviour
 {
     const float DEFENSE_BONUS_CITY = 0.5f; //50% more
-    [System.Serializable] public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
+    [System.Serializable]
+    public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
     [SerializeField]
     UnityScoreEvent scoreEvent;
     [SerializeField]
