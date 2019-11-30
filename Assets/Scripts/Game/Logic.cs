@@ -142,4 +142,11 @@ public class Logic : MonoBehaviour
     {
         scoreManager.OnScoreEvent(type, playerID);
     }
+
+    internal void TransferCity(int defeatedPlayerID, int conquererPlayerID, int cityID)
+    {
+        City city = players[defeatedPlayerID].RemoveCity(cityID);
+        city.PlayerID = conquererPlayerID;
+        players[conquererPlayerID].TransferCity(city);
+    }
 }

@@ -31,8 +31,8 @@ public class UnitManager : MonoBehaviour
     public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.Width;
-        //AddUnit(index, UnitType.WARRIOR);
-        AddUnit(index, UnitType.ARCHER);
+        AddUnit(index, UnitType.WARRIOR);
+        //AddUnit(index, UnitType.ARCHER);
         //AddUnit(index, UnitType.CATAPULT);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.Width;
         AddUnit(index, UnitType.SETTLER);

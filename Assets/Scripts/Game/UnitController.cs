@@ -41,8 +41,19 @@ public class UnitController : MonoBehaviour
                             City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
                             Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
                             bool thereIsCity = goalCity != null;
-                            if (thereIsCity && goalCity.PlayerID == currentPlayerID && goalUnit == null) {
-                                MoveUnit(selectedUnitGO, cell);
+                            if (thereIsCity && goalUnit == null) {
+                                if (goalCity.PlayerID == currentPlayerID) {
+                                    MoveUnit(selectedUnitGO, cell);
+                                    return;
+                                }
+                                else if (goalCity.PlayerID != currentPlayerID) {
+                                    //MoveUnit(selectedUnitGO, cell);
+                                    //ConquerCity(conquererPlayer, conqueredPlayer);
+                                    ConquerCity(currentPlayerID, goalCity.PlayerID, goalCity.ID);
+                                    MoveUnit(selectedUnitGO, cell);
+                                    //Debug.Log("ConquerCity");
+                                    return;
+                                }
                             }
 
                             if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
@@ -53,6 +64,9 @@ public class UnitController : MonoBehaviour
                                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                                 logic.RemoveUnit(goalUnit);
                                 Destroy(goalUnit.gameObject);
+                                if(thereIsCity) {
+                                    ConquerCity(currentPlayerID, goalCity.PlayerID, goalCity.ID);
+                                }
                             }
                             else {
                                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
@@ -78,14 +92,14 @@ public class UnitController : MonoBehaviour
 
                     if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
 
-                    bool isDead = false;
+                    /*bool isDead = false;
                     if (selectedUnit.Type == UnitStats.UnitType.CATAPULT && isDefenderInCity) {
                         isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
                     }
                     else {
                         isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
-                    }
-                    if(isDead) {
+                    }*/
+                    if(DistanceFight(selectedUnit, goalUnit, isDefenderInCity)) {
                         scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                         logic.RemoveUnit(goalUnit);
                         Destroy(goalUnit.gameObject);
@@ -93,6 +107,12 @@ public class UnitController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ConquerCity(int conquererPlayerID, int defeatedPlayerID, int cityID)
+    {
+        logic.TransferCity(defeatedPlayerID, conquererPlayerID, cityID);
+        scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT_CITY, conquererPlayerID);
     }
 
     public void Unselect()

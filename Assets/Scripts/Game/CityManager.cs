@@ -49,4 +49,22 @@ public class CityManager : MonoBehaviour
 
         return shields;
     }
+
+    internal City RemoveCity(int cityID)
+    {
+        //throw new NotImplementedException();
+        for(int i = 0; i < cities.Count; ++i) {
+            if(cities[i].ID == cityID) {
+                City city = cities[i];
+                cities.RemoveAt(i);
+                return city;
+            }
+        }
+        return null;
+    }
+
+    internal void TransferCity(City city)
+    {
+        cities.Add(city);
+    }
 }

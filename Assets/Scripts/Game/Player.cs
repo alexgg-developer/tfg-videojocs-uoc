@@ -61,4 +61,14 @@ public class Player
     {
         unitManager.AddUnit(hexCoordinates, unitType);
     }
+
+    internal City RemoveCity(int cityID)
+    {
+        return cityManager.RemoveCity(cityID);
+    }
+
+    internal void TransferCity(City city)
+    {
+        cityManager.TransferCity(city);
+    }
 }
