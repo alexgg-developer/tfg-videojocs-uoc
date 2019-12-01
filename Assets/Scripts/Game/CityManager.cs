@@ -67,4 +67,9 @@ public class CityManager : MonoBehaviour
     {
         cities.Add(city);
     }
+
+    internal int GetNumberOfCities()
+    {
+        return cities.Count;
+    }
 }

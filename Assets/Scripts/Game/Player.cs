@@ -15,6 +15,8 @@ public class Player
     int score = 0;
     public int Score { get { return score; } set { score = value; } }
     public int PlayerID { get { return unitManager.PlayerID; } set { unitManager.PlayerID = value; } }
+    bool isDead = false;
+    public bool IsDead { get { return isDead; } set { isDead = value; } }
 
 
     public Player(UnitManager aUnitManager, CityManager aCityManager, TechnologyManager aTechnologyManager)
@@ -83,5 +85,13 @@ public class Player
     internal bool HasTechnology(TechnologyType technologyType)
     {
         return technologyManager.HasTechnology(technologyType);
+    }
+
+    public bool CheckDeath()
+    {
+        isDead = cityManager.GetNumberOfCities() == 0;
+        isDead = isDead && !unitManager.HasSettler();
+
+        return isDead;
     }
 }

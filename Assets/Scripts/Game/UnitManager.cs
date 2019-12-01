@@ -87,6 +87,16 @@ public class UnitManager : MonoBehaviour
         unitComponent.OnNewPosition();
     }
 
-
-
+    internal bool HasSettler()
+    {
+        bool hasSettler = false;
+        for (int i = 0; i < unitInstances.Count; ++i) {
+            Unit currentUnit = unitInstances[i].GetComponent<Unit>();
+            if (currentUnit.Type == UnitType.SETTLER) {
+                hasSettler = true;
+                break;
+            }
+        }
+        return hasSettler;
+    }
 }

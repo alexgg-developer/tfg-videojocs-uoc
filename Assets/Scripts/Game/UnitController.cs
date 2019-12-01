@@ -20,7 +20,7 @@ public class UnitController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        logic = this.gameObject.GetComponent<Logic>();
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
     }
 
     public void Move()

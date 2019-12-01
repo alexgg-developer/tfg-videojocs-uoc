@@ -34,5 +34,17 @@ public class ScoreManager
     {
         players[playerID].Score += scores[(int)type];
     }
+    
+    internal int GetScorePlayerWinner(int numberPlayers)
+    {
+        int playerID = 0;
+        int greatestScore = players[0].Score;
+        for(int i = 1; i < numberPlayers; ++i) {
+            if(players[i].Score > greatestScore) {
+                playerID = i;
+            }
+        }
 
+        return playerID;
+    }
 }

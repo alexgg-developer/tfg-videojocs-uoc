@@ -20,9 +20,17 @@ public class FlyCamera : MonoBehaviour
     public float camSens = 0.25f; //How sensitive it with mouse
     private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
     private float totalRun = 1.0f;
+    Logic logic;
+
+    void Start()
+    {
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
+    }
 
     void Update()
     {
+        if (logic.IsEndOfGame) return;
+
         if (Input.GetMouseButtonDown(0)) {
             lastMouse = Input.mousePosition;
         }

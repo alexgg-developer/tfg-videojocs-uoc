@@ -13,16 +13,19 @@ public class InputController : MonoBehaviour
     float clicktime = 0;
     float clickdelay = 0.5f;
     bool isDoubleClick = false;
+    Logic logic;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        logic = this.gameObject.GetComponent<Logic>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (logic.IsEndOfGame) return;
+
         if (Input.GetKeyUp(KeyCode.B)) {
             unitController.SettlerCommand();
         }

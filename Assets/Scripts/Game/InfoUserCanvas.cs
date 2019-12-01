@@ -11,14 +11,25 @@ public class InfoUserCanvas : MonoBehaviour
     [SerializeField]
     GameObject menuPanel;
 
+    Logic logic = null;
+
+    private void Start()
+    {
+        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
+    }
+
     public void SwitchTechnologyPanel()
     {
-        technologyPanel.SetActive(!technologyPanel.activeInHierarchy);
+        if (!logic.IsEndOfGame) {
+            technologyPanel.SetActive(!technologyPanel.activeInHierarchy);
+        }
     }
 
     public void SwitchMenuPanel()
     {
-        menuPanel.SetActive(!menuPanel.activeInHierarchy);
+        if (!logic.IsEndOfGame) {
+            menuPanel.SetActive(!menuPanel.activeInHierarchy);
+        }
     }
 
     public void OnChangeOfPlayer(int newPlayerID)

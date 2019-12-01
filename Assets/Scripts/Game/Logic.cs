@@ -16,19 +16,28 @@ public class Logic : MonoBehaviour
     [SerializeField]
     UnityIntEvent changeOfTurnEvent;
     [SerializeField]
-    UnityIntEvent changeOfPlayerEvent;    
+    UnityIntEvent changeOfPlayerEvent;
+    [SerializeField]
+    GameObject victoryPanel;
 
     public ScoreManager scoreManager;
 #pragma warning restore 0649
     private Player[] players;
     public Player[] Players { get { return players; }}
+
     private Tuple<int, int>[] initialPositions;
     int numberPlayers = 2;
     public int NumberPlayers { get { return numberPlayers; } set { numberPlayers = value; } }
     int turn = 1;
+
+
     public int Turn { get { return turn; } set { turn = value; } }
     int currentPlayer = 0;
     public int CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
+    bool isEndOfGame = false;
+    public bool IsEndOfGame { get { return isEndOfGame; } set { isEndOfGame = value; } }
+    int turnsToPlay = 10;
+    public int TurnsToPlay { get { return turnsToPlay; } set { turnsToPlay = value; } }
 
     // Start is called before the first frame update
     void Awake()
@@ -74,16 +83,32 @@ public class Logic : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space)) {
-            ++currentPlayer;
-            if (currentPlayer == numberPlayers) {
-                currentPlayer = 0;
-                ++turn;
-                changeOfTurnEvent.Invoke(turn);
-            }
-            players[currentPlayer].ResetUnitMovement();
-            players[currentPlayer].ProduceShields();
-            changeOfPlayerEvent.Invoke(currentPlayer);
+            do {
+                ++currentPlayer;
+                if (currentPlayer == numberPlayers) {
+                    currentPlayer = 0;
+                    ++turn;
+                    changeOfTurnEvent.Invoke(turn);
+                    isEndOfGame = IsEndOfGameTurn();
+                }
+                isEndOfGame = isEndOfGame || CheckSurvivalEndOfGameTurn();
+                if (!isEndOfGame) {
+                    players[currentPlayer].ResetUnitMovement();
+                    players[currentPlayer].ProduceShields();
+                    changeOfPlayerEvent.Invoke(currentPlayer);
+                    players[currentPlayer].ProduceShields();
+                }
+                else {
+                    victoryPanel.SetActive(true);
+                    break;
+                }
+            } while (players[currentPlayer].IsDead);
         }
+    }
+
+    internal bool IsEndOfGameTurn()
+    {
+        return turnsToPlay == turn;
     }
 
     internal bool HasTechnology(TechnologyType technologyType)
@@ -162,5 +187,35 @@ public class Logic : MonoBehaviour
         City city = players[defeatedPlayerID].RemoveCity(cityID);
         city.PlayerID = conquererPlayerID;
         players[conquererPlayerID].TransferCity(city);
+    }
+
+
+    internal int GetScorePlayerWinner()
+    {
+        return scoreManager.GetScorePlayerWinner(numberPlayers);
+    }
+
+
+    internal int GetLastCivilizationStanding()
+    {
+        for (int i = 0; i < numberPlayers; ++i) {
+            if(!players[i].IsDead) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    private bool CheckSurvivalEndOfGameTurn()
+    {
+        int numberOfPlayersAlive = 0;
+
+        for (int i = 0; i < numberPlayers; ++i) {
+            if (!players[i].CheckDeath()) {
+                ++numberOfPlayersAlive;
+            }
+        }
+
+        return numberOfPlayersAlive == 1;
     }
 }
