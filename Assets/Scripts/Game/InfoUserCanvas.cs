@@ -8,10 +8,17 @@ public class InfoUserCanvas : MonoBehaviour
     GameObject technologyPanel;
     [SerializeField]
     GameObject cityPanel;
+    [SerializeField]
+    GameObject menuPanel;
 
     public void SwitchTechnologyPanel()
     {
         technologyPanel.SetActive(!technologyPanel.activeInHierarchy);
+    }
+
+    public void SwitchMenuPanel()
+    {
+        menuPanel.SetActive(!menuPanel.activeInHierarchy);
     }
 
     public void OnChangeOfPlayer(int newPlayerID)
