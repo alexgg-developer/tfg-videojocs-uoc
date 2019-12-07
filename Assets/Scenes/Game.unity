@@ -3962,7 +3962,7 @@ MonoBehaviour:
   hexGrid: {fileID: 1640579102}
   Width: 15
   Height: 15
-  MaxElevation: 4
+  MaxElevation: 7
 --- !u!4 &649621501
 Transform:
   m_ObjectHideFlags: 0
@@ -8590,14 +8590,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b47fba780a8904cb11b576dee5c150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noiseSource: {fileID: 2800000, guid: 32b90803582e240409e7ea6b9e34c066, type: 3}
+  width: 6
+  height: 6
   cellPrefab: {fileID: 1978827528438129150, guid: 84eb781b7350a204d91eb4ddd7bcd5c1,
     type: 3}
   cellLabelPrefab: {fileID: 4934188258821608332, guid: daec97e1dd99e0c438dc0bc33ee5dcbc,
     type: 3}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   touchedColor: {r: 1, g: 0, b: 1, a: 1}
-  width: 6
-  height: 6
 --- !u!4 &1640579103
 Transform:
   m_ObjectHideFlags: 0

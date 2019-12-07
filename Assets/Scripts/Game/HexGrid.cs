@@ -3,6 +3,15 @@ using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
+    [SerializeField]
+    private Texture2D noiseSource;
+    [SerializeField]
+    private int width = 6;
+    public int Width { get { return width; } private set { width = value; } }
+    [SerializeField]
+    private int height = 6;
+    public int Height { get { return height; } private set { height = value; } }
+
 
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
@@ -12,12 +21,6 @@ public class HexGrid : MonoBehaviour
 
     public enum TerrainTypes { GRASS, PLAIN, ICE, MOUNTAIN, WATER, SIZE }
 
-    [SerializeField]
-    private int width = 6;
-    public int Width { get { return width; } private set { width = value; } }
-    [SerializeField]
-    private int height = 6;
-    public int Height { get { return height; } private set { height = value; } }
     private HexCell[] cells;
     public HexCell[] Cells { get { return cells; } private set { cells = value; } }
     private Canvas gridCanvas;
@@ -28,6 +31,8 @@ public class HexGrid : MonoBehaviour
     {
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
+
+        HexMetrics.noiseSource = noiseSource;
     }
 
     public void CreateGrid(int width, int height)
