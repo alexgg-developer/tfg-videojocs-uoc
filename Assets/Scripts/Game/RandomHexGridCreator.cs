@@ -8,7 +8,7 @@ public class RandomHexGridCreator : MonoBehaviour
     [SerializeField]
     private HexGrid hexGrid;
     public HexGrid HexGrid { get { return hexGrid; } }
-    public int Width, Height;
+    public int chunksX, chunksZ;
     public int MaxElevation;
 
     Color[] colors;
@@ -25,12 +25,14 @@ public class RandomHexGridCreator : MonoBehaviour
 
     public void CreateGrid()
     {
-        hexGrid.CreateGrid(Width, Height);
+        //these are chunks
+        hexGrid.CreateCells(chunksX, chunksZ);
         HexCell[] hexCells = hexGrid.Cells;
-        for (int i = 0; i < Height; ++i) {
-            for (int j = 0; j < Width; ++j) {
-                hexCells[i * Width + j].color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
-                hexCells[i * Width + j].Elevation = Random.Range(0, MaxElevation);
+        int cellsInX = chunksX * HexMetrics.chunkSizeX;
+        for (int i = 0; i < chunksZ * HexMetrics.chunkSizeZ; ++i) {
+            for (int j = 0; j < cellsInX; ++j) {
+                hexCells[i * cellsInX + j].color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
+                hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
             }
         }
         hexGrid.Refresh();
