@@ -130,7 +130,14 @@ MonoBehaviour:
   - {fileID: 381413685760423858, guid: a4883fd0db8c6884b943e216780de870, type: 3}
   - {fileID: 381413685760423858, guid: 95fed4d81f2dd014585eac96357311eb, type: 3}
   - {fileID: 9133504593291124797, guid: 20cf44ce192e8f64b960c9c6932b589a, type: 3}
-  - {fileID: 381413685760423858, guid: 4dc7ec6c672444147ad1d7b0e9550201, type: 3}
+  - {fileID: 381413685760423858, guid: ca16083880d472b408624eb1266fee9b, type: 3}
+  unitPrefabsRed:
+  - {fileID: 9133504593291124797, guid: 2bb22a6db02dd544bb032150ec70bc0d, type: 3}
+  - {fileID: 381413685760423858, guid: 5839518ba743a564eb778e9e83126542, type: 3}
+  - {fileID: 381413685760423858, guid: 092a4e977bac26f409bea7c93c040c60, type: 3}
+  - {fileID: 381413685760423858, guid: 308de2b49fc17f342b205e3fe0aa0106, type: 3}
+  - {fileID: 9133504593291124797, guid: a4681afc754a4bf4abd467965c3c3dd8, type: 3}
+  - {fileID: 381413685760423858, guid: d29bf4f2c26fa4140974a1488cbf9be4, type: 3}
   grid: {fileID: 0}
   healthStatsPrefab: {fileID: 4934188258821608332, guid: 5517113c53e020b439f2375f4a114e08,
     type: 3}

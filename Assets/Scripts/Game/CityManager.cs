@@ -9,7 +9,12 @@ public class CityManager : MonoBehaviour
     [SerializeField]
     GameObject[] cityPrefabs;
     [SerializeField]
+    GameObject[] cityPrefabsRed;
+    [SerializeField]
     HexGrid grid;
+    
+    GameObject[] currentCityPrefabs;
+
     public HexGrid Grid { get { return grid; } set { grid = value; } }
     int playerID = 0;
     public int PlayerID { get { return playerID; } set { playerID = value; } }
@@ -17,6 +22,17 @@ public class CityManager : MonoBehaviour
     //List<GameObject> cityInstances = new List<GameObject>();
     List<City> cities = new List<City>();
 
+    public void Start()
+    {
+        switch (playerID) {
+            case 0:
+                currentCityPrefabs = cityPrefabs;
+                break;
+            case 1:
+                currentCityPrefabs = cityPrefabsRed;
+                break;
+        }
+    }
     public void AddCity(int index)
     {
         HexCell cell = grid.GetCell(index);
@@ -31,7 +47,7 @@ public class CityManager : MonoBehaviour
 
     private void AddCityInCell(HexCell cell)
     {
-        GameObject cityInstance = Instantiate(cityPrefabs[0], cell.transform);
+        GameObject cityInstance = Instantiate(currentCityPrefabs[0], cell.transform);
         City cityComponent = cityInstance.GetComponent<City>();
         cityComponent.Name = "City " + (cities.Count + 1);
         cityComponent.PlayerID = playerID;

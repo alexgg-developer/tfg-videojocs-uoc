@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +9,9 @@ public class UnitManager : MonoBehaviour
 #pragma warning disable 0649
     [SerializeField]
     GameObject[] unitPrefabs;
+    [SerializeField]
+    GameObject[] unitPrefabsRed;
+    GameObject[] currentUnitPrefabs;
     [SerializeField]
     HexGrid grid;
     [SerializeField]
@@ -24,17 +26,25 @@ public class UnitManager : MonoBehaviour
 
     public void Awake()
     {
-
         unitCanvas = GetComponentInChildren<Canvas>();
     }
 
     public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
     {
-        int index = initialPosition.Item1 + initialPosition.Item2 * grid.CellCountX ;
+        switch (playerID) {
+            case 0:
+                currentUnitPrefabs = unitPrefabs;
+                break;
+            case 1:
+                currentUnitPrefabs = unitPrefabsRed;
+                break;
+        }
+
+        int index = initialPosition.Item1 + initialPosition.Item2 * grid.CellCountX;
         AddUnit(index, UnitType.WARRIOR);
         //AddUnit(index, UnitType.ARCHER);
         //AddUnit(index, UnitType.CATAPULT);
-        index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.CellCountX ;
+        index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.CellCountX;
         AddUnit(index, UnitType.SETTLER);
         //AddUnit(index, UnitType.CATAPULT);
         /*index = initialPosition.Item1 + (initialPosition.Item2 + 2) * grid.Width;
@@ -43,13 +53,13 @@ public class UnitManager : MonoBehaviour
 
     public void RemoveUnit(Unit unit)
     {
-        for(int i = 0; i < unitInstances.Count; ++i) { 
+        for (int i = 0; i < unitInstances.Count; ++i) {
             Unit currentUnit = unitInstances[i].GetComponent<Unit>();
-            if(currentUnit.ID == unit.ID) {
+            if (currentUnit.ID == unit.ID) {
                 unitInstances.RemoveAt(i);
                 break;
             }
-         }
+        }
     }
 
     public void ResetUnitMovement()
@@ -74,7 +84,7 @@ public class UnitManager : MonoBehaviour
 
     public void AddUnitInCell(HexCell cell, UnitType type)
     {
-        GameObject unitInstance = Instantiate(unitPrefabs[(int)type], cell.transform);
+        GameObject unitInstance = Instantiate(currentUnitPrefabs[(int)type], cell.transform);
         Unit unitComponent = unitInstance.GetComponent<Unit>();
         unitComponent.PlayerID = playerID;
         float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;

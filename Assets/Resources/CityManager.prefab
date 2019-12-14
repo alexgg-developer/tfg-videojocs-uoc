@@ -45,4 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cityPrefabs:
   - {fileID: 6729039281669771525, guid: 79ff9f7bd681af047a00a8006c86f224, type: 3}
+  cityPrefabsRed:
+  - {fileID: 6729039281669771525, guid: 4159949be7a0584429c249c928bf4455, type: 3}
   grid: {fileID: 0}
