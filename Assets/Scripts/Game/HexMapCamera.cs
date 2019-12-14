@@ -82,12 +82,12 @@ public class HexMapCamera : MonoBehaviour
     {
         float xMax = (grid.chunkCountX * HexMetrics.chunkSizeX - 0.5f )*
             (2f * HexMetrics.innerRadius);
-        position.x = Mathf.Clamp(position.x, 0f, xMax);
+        position.x = Mathf.Clamp(position.x, 60.0f, xMax - 60.0f);
 
         float zMax =
             (grid.chunkCountZ * HexMetrics.chunkSizeZ - 1) *
             (1.5f * HexMetrics.outerRadius);
-        position.z = Mathf.Clamp(position.z, 0f, zMax);
+        position.z = Mathf.Clamp(position.z, 40f, zMax - 40.0f);
 
         return position;
     }
