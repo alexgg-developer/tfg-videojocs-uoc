@@ -3,12 +3,16 @@ using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
+
+#pragma warning disable 0649
     [SerializeField]
     private HexGridChunk chunkPrefab;
     [SerializeField]
     private Texture2D noiseSource;
+#pragma warning restore 0649
+
     //[SerializeField]
-	//this is now calculated
+    //this is now calculated
     private int cellCountX;
     public int CellCountX { get { return cellCountX; } private set { cellCountX = value; } }
     //[SerializeField]

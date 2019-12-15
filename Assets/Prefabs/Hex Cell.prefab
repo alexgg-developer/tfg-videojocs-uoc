@@ -43,10 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 538c45198d7f4e0469a668979fa2fef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highLightColors:
+  - {r: 0.031847, g: 0, b: 1, a: 0}
+  - {r: 1, g: 0.033018887, b: 0.033018887, a: 0}
   coordinates:
     x: 0
     z: 0
   color: {r: 0, g: 0, b: 0, a: 0}
+  uiRect: {fileID: 0}
   neighbors:
   - {fileID: 0}
   - {fileID: 0}

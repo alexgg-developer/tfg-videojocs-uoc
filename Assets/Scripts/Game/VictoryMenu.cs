@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class VictoryMenu : MonoBehaviour
 {
+#pragma warning disable 0649
     [SerializeField]
     TextMeshProUGUI victoryMessageText;
+#pragma warning restore 0649
 
     Logic logic = null;
 

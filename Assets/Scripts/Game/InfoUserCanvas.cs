@@ -1,15 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InfoUserCanvas : MonoBehaviour
 {
+
+#pragma warning disable 0649
     [SerializeField]
     GameObject technologyPanel;
     [SerializeField]
     GameObject cityPanel;
     [SerializeField]
     GameObject menuPanel;
+    [SerializeField]
+    GameObject inMapResourcePanel;
+#pragma warning restore 0649
 
     Logic logic = null;
 
@@ -18,8 +21,17 @@ public class InfoUserCanvas : MonoBehaviour
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
     }
 
+    public void ClosePanels()
+    {
+        technologyPanel.SetActive(false);
+        cityPanel.SetActive(false);
+        menuPanel.SetActive(false);
+        inMapResourcePanel.SetActive(false);
+    }
+
     public void SwitchTechnologyPanel()
     {
+        ClosePanels();
         if (!logic.IsEndOfGame) {
             technologyPanel.SetActive(!technologyPanel.activeInHierarchy);
         }
@@ -27,8 +39,17 @@ public class InfoUserCanvas : MonoBehaviour
 
     public void SwitchMenuPanel()
     {
+        ClosePanels();
         if (!logic.IsEndOfGame) {
             menuPanel.SetActive(!menuPanel.activeInHierarchy);
+        }
+    }
+
+    public void OpenInMapResourcePanel()
+    {
+        ClosePanels();
+        if (!logic.IsEndOfGame) {
+            inMapResourcePanel.SetActive(true);
         }
     }
 
@@ -42,7 +63,7 @@ public class InfoUserCanvas : MonoBehaviour
     {
         cityPanel.SetActive(false);
     }
-    
+
     public void OnCityPanelOpen()
     {
         technologyPanel.SetActive(false);

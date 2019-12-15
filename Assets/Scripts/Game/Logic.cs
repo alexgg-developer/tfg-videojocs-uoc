@@ -218,4 +218,11 @@ public class Logic : MonoBehaviour
 
         return numberOfPlayersAlive == 1;
     }
+
+    public City FindNearestCity(HexCoordinates resourceCoordinates)
+    {
+        var city = players[currentPlayer].FindNearestCity(resourceCoordinates);
+
+        return city;
+    }
 }

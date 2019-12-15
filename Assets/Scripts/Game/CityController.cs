@@ -3,14 +3,17 @@ using UnityEngine;
 
 public class CityController : MonoBehaviour
 {
+
+#pragma warning disable 0649
     [SerializeField]
     HexGrid hexGrid;
     [SerializeField]
     CityPanel cityInfoPanel;
+#pragma warning restore 0649
 
     Logic logic;
-    //City selectedCity = null;
     int currentPlayerID = 0;
+    HexCell selectedCell = null;
 
 
     // Start is called before the first frame update
@@ -30,14 +33,23 @@ public class CityController : MonoBehaviour
                 City city = cell.gameObject.GetComponentInChildren<City>();
                 if (city != null) {
                     if (city.PlayerID == currentPlayerID) {
-                        cityInfoPanel.SelectedCity = city;
-                        cityInfoPanel.gameObject.SetActive(true);
+                        Select(cell, city);
                     }                    
                 }
             }
         }
     }
-    
+
+    public void Select(HexCell cell, City city)
+    {
+        Unselect();
+        cell.EnableHighlight(city.PlayerID);
+        selectedCell = cell;
+
+        cityInfoPanel.SelectedCity = city;
+        cityInfoPanel.gameObject.SetActive(true);
+    }
+
     public void OnChangeOfPlayer(int newPlayerID)
     {
         currentPlayerID = newPlayerID;
@@ -46,7 +58,10 @@ public class CityController : MonoBehaviour
 
     internal void Unselect()
     {
-        //selectedCity = null;
+        if (selectedCell != null) {
+            selectedCell.DisableHighlight();
+            selectedCell = null;
+        }
         if (cityInfoPanel != null) {
             cityInfoPanel.gameObject.SetActive(false);
         }

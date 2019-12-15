@@ -1,8 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using static HexMetrics;
 
 public class HexCell : MonoBehaviour
 {
+    static private Color[] highLightColors =
+    {
+
+        new Color(0f, 0f, 1.0f),
+        new Color(1.0f, 0f, 0.0f)
+    };
+
     public HexCoordinates coordinates;
     public Color color;
     int elevation;
@@ -36,8 +44,20 @@ public class HexCell : MonoBehaviour
             return transform.localPosition;
         }
     }
-
+    private bool hasResource = false;
+    public bool HasResource
+    {
+        get
+        {
+            return hasResource;
+        }
+        set
+        {
+            hasResource = value;
+        }
+    }
     public RectTransform uiRect;
+    private GameObject resource;
 
 #pragma warning disable 0649
     [SerializeField]
@@ -74,5 +94,41 @@ public class HexCell : MonoBehaviour
         return HexMetrics.GetEdgeType(
             elevation, otherCell.elevation
         );
+    }
+
+    public void EnableHighlight(Color color)
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.color = color;
+        highlight.enabled = true;
+    }
+
+    public void EnableHighlight(int playerID)
+    {
+        Color highLightColor = highLightColors[playerID];
+        EnableHighlight(highLightColor);
+    }
+
+    public void DisableHighlight()
+    {
+        Image highlight = uiRect.GetChild(0).GetComponent<Image>();
+        highlight.enabled = false;
+    }
+
+    public void SetResource(bool activate)
+    {
+        if (activate) {
+            resource = Instantiate(Resources.Load("Corn", typeof(GameObject)), gameObject.transform) as GameObject;
+            float offsetY = resource.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * resource.transform.localScale.y * 0.5f;
+            resource.transform.Translate(new Vector3(0f, offsetY, 0f));
+            hasResource = true;
+        }
+        else {
+            if(resource != null) {
+                Destroy(resource);
+                resource = null;
+                hasResource = false;
+            }
+        }
     }
 }

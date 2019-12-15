@@ -68,7 +68,6 @@ public class CityManager : MonoBehaviour
 
     internal City RemoveCity(int cityID)
     {
-        //throw new NotImplementedException();
         for(int i = 0; i < cities.Count; ++i) {
             if(cities[i].ID == cityID) {
                 City city = cities[i];
@@ -87,5 +86,23 @@ public class CityManager : MonoBehaviour
     internal int GetNumberOfCities()
     {
         return cities.Count;
+    }
+
+    internal City FindNearestCity(HexCoordinates resourceCoordinates)
+    {
+        City nearestCity = null;
+        int nearestDistance = Int32.MaxValue;
+
+        foreach(City city in cities) {
+            int distance = HexCoordinates.distance(resourceCoordinates, city.transform.parent.GetComponent<HexCell>().coordinates);
+            //if(distance < nearestDistance) {
+            if (distance == 1) {
+                nearestDistance = distance;
+                nearestCity = city;
+                break;
+            }
+        }
+
+        return nearestCity;
     }
 }

@@ -3,12 +3,16 @@ using UnityEngine.EventSystems;
 
 public class InputController : MonoBehaviour
 {
+#pragma warning disable 0649
     [SerializeField]
     UnitController unitController;
     [SerializeField]
     CityController cityController;
+    [SerializeField]
+    ResourceController resourceController;
+#pragma warning restore 0649
 
-    int currentPlayerID = 0;
+    //int currentPlayerID = 0;
     float clicked = 0;
     float clicktime = 0;
     float clickdelay = 0.5f;
@@ -46,12 +50,14 @@ public class InputController : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0)) {
                 if (!isDoubleClick) {
-                    unitController.Select();
                     cityController.Unselect();
+                    resourceController.Unselect();
+                    unitController.Select();
                 }
                 else {
-                    cityController.Select();
                     unitController.Unselect();
+                    cityController.Select();
+                    resourceController.Select();
                 }
 
                 isDoubleClick = false;

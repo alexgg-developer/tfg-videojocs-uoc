@@ -33,6 +33,10 @@ public class RandomHexGridCreator : MonoBehaviour
             for (int j = 0; j < cellsInX; ++j) {
                 hexCells[i * cellsInX + j].color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
                 hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
+                float random = Random.value;
+                if (random <= 0.12f) {
+                    hexCells[i * cellsInX + j].SetResource(true);
+                }
             }
         }
         hexGrid.Refresh();

@@ -94,4 +94,10 @@ public class Player
 
         return isDead;
     }
+
+    internal City FindNearestCity(HexCoordinates resourceCoordinates)
+    {
+        var city = cityManager.FindNearestCity(resourceCoordinates);
+        return city;
+    }
 }

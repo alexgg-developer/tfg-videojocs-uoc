@@ -6,15 +6,21 @@ using UnityEngine.EventSystems;
 public class UnitController : MonoBehaviour
 {
     const float DEFENSE_BONUS_CITY = 0.5f; //50% more
+
+#pragma warning disable 0649
     [System.Serializable]
     public class UnityScoreEvent : UnityEvent<ScoreManager.TypesScore, int> { }
     [SerializeField]
     UnityScoreEvent scoreEvent;
     [SerializeField]
     HexGrid hexGrid;
+#pragma warning restore 0649
+
     Logic logic;
-    GameObject selectedUnitGO = null;
     int currentPlayerID = 0;
+
+    GameObject selectedUnitGO = null;
+    HexCell selectedCell = null;
 
     
     // Start is called before the first frame update
@@ -38,7 +44,9 @@ public class UnitController : MonoBehaviour
                     if (selectedUnit.MovementLeft < 1.0f) return;
 
                     if (cell != selectedUnitGO.transform.parent) {
-                        if (cell != null && cell.gameObject.transform.childCount > 0) {
+                        int childCount = cell.gameObject.transform.childCount;
+                        if (cell.HasResource) --childCount;
+                        if (cell != null && childCount > 0) {
                             City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
                             Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
                             bool thereIsCity = goalCity != null;
@@ -73,7 +81,7 @@ public class UnitController : MonoBehaviour
                                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
                                 logic.RemoveUnit(selectedUnit);
                                 Destroy(selectedUnitGO);
-                                selectedUnitGO = null;
+                                Unselect();
                             }
                             return;
                         }
@@ -115,12 +123,7 @@ public class UnitController : MonoBehaviour
         logic.TransferCity(defeatedPlayerID, conquererPlayerID, cityID);
         scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT_CITY, conquererPlayerID);
     }
-
-    public void Unselect()
-    {
-        selectedUnitGO = null;
-    }
-
+    
     void MoveUnit(GameObject unitToMove, HexCell cellToMoveTo)
     {
         unitToMove.transform.SetParent(cellToMoveTo.transform);
@@ -129,6 +132,7 @@ public class UnitController : MonoBehaviour
         var unit = unitToMove.GetComponent<Unit>();
         --unit.MovementLeft;
         unit.OnNewPosition();
+        SwitchSelectedCell(cellToMoveTo, unit.PlayerID);
 
     } 
 
@@ -145,13 +149,36 @@ public class UnitController : MonoBehaviour
                     Unit unit;
                     if (child.TryGetComponent<Unit>(out unit)) {
                         if (unit.PlayerID == currentPlayerID) {
-                            child.transform.Translate(3f, 0f, 0f);
-                            selectedUnitGO = child;
+                            Select(cell, unit);
                         }
                     }
                 }
             }
         }
+    }
+
+    public void Select(HexCell cell, Unit unit)
+    {
+        Unselect();
+        cell.EnableHighlight(unit.PlayerID);
+        selectedUnitGO = unit.gameObject;
+        selectedCell = cell;
+    }
+
+    public void Unselect()
+    {
+        if (selectedCell != null) {
+            selectedCell.DisableHighlight();
+            selectedCell = null;
+        }
+        selectedUnitGO = null;
+    }
+
+    public void SwitchSelectedCell(HexCell cell, int playerID)
+    {
+        selectedCell.DisableHighlight();
+        selectedCell = cell;
+        cell.EnableHighlight(playerID);
     }
 
     bool Fight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
@@ -213,7 +240,7 @@ public class UnitController : MonoBehaviour
     public void OnChangeOfPlayer(int newPlayerID)
     {
         currentPlayerID = newPlayerID;
-        selectedUnitGO = null;
+        Unselect();
     }
 
     public void SettlerCommand()
@@ -221,10 +248,12 @@ public class UnitController : MonoBehaviour
         if (selectedUnitGO == null) return;
         var unit = selectedUnitGO.GetComponent<Unit>();
         if (unit.Type == UnitStats.UnitType.SETTLER) {
-            if (logic.BuildCity(selectedUnitGO.GetComponentInParent<HexCell>().coordinates)) {
+            var cell = selectedUnitGO.GetComponentInParent<HexCell>();
+            if (logic.BuildCity(cell.coordinates)) {
                 logic.RemoveUnit(unit);
                 Destroy(selectedUnitGO);
-                selectedUnitGO = null;
+                Unselect();
+                cell.SetResource(false);
             }
         }
     }

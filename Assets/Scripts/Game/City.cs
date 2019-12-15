@@ -12,11 +12,16 @@ public class City : MonoBehaviour
     private int id;
     public int ID { get { return id; } set { id = value; } }
     private uint population = 1;
-    public uint Population { get { return population; } set { population = value; } }
+    public uint Population {
+        get {
+            return population;
+        }
+        set { population = value; }
+    }
     private int playerID;
     public int PlayerID { get { return playerID; } set { playerID = value; } }
-    private string name = "";
-    public string Name { get { return name; } set { name = value; } }
+    private string cityName = "";
+    public string Name { get { return cityName; } set { cityName = value; } }
 
     private HashSet<BuildingInfo.BuildingType> buildingsBuilt = new HashSet<BuildingInfo.BuildingType>();
 
@@ -34,7 +39,7 @@ public class City : MonoBehaviour
     internal void BuildBuilding(BuildingInfo.BuildingType buildingType)
     {
         buildingsBuilt.Add(buildingType);
-        if (buildingType == BuildingInfo.BuildingType.BARN) ++Population;
+        if (buildingType == BuildingInfo.BuildingType.BARN) GrowCity();
     }
 
     internal bool HasBuilding(BuildingInfo.BuildingType buildingType)
@@ -45,5 +50,10 @@ public class City : MonoBehaviour
     public bool HasWall()
     {
         return buildingsBuilt.Contains(BuildingInfo.BuildingType.WALL);
+    }
+
+    internal void GrowCity()
+    {
+        ++population;
     }
 }

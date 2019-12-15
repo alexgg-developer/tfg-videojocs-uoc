@@ -2,8 +2,11 @@
 
 public class HexMapCamera : MonoBehaviour
 {
+
+#pragma warning disable 0649
     [SerializeField]
     private HexGrid grid;
+#pragma warning restore 0649
 
     Transform swivel, stick;
     float zoom = 0.7f;
