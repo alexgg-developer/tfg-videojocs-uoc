@@ -21,7 +21,7 @@ public class ScorePanel : MonoBehaviour
         }
         lastScore = new int[logic.NumberPlayers];
         for (int i = 0; i < logic.NumberPlayers; ++i) {
-            lastScore[i] = 0;
+            lastScore[i] = -1;
         }
         playerTexts[logic.CurrentPlayer].fontSize = 14;
     }
@@ -52,7 +52,12 @@ public class ScorePanel : MonoBehaviour
     {
         for (int i = 0; i < logic.NumberPlayers; ++i) {
             if (lastScore[i] != logic.Players[i].Score) {
-                playerTexts[i].text = "Player " + (i+1) + ": " + logic.Players[i].Score;                
+                if (logic.IsThereAI && i == 1) {
+                    playerTexts[i].text = "(AI)Player " + (i + 1) + ": " + logic.Players[i].Score;
+                }
+                else {
+                    playerTexts[i].text = "Player " + (i + 1) + ": " + logic.Players[i].Score;
+                }
             }
         }
     }

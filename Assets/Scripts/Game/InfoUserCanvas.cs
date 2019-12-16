@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InfoUserCanvas : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class InfoUserCanvas : MonoBehaviour
     GameObject menuPanel;
     [SerializeField]
     GameObject inMapResourcePanel;
+    [SerializeField]
+    Button buttonTechnologyPanel;
+    [SerializeField]
+    Button buttonMenuPanel;
 #pragma warning restore 0649
 
     Logic logic = null;
@@ -57,6 +62,14 @@ public class InfoUserCanvas : MonoBehaviour
     {
         technologyPanel.SetActive(false);
         cityPanel.SetActive(false);
+        if(logic.IsCurrentPlayerAI) {
+            buttonMenuPanel.interactable = false;
+            buttonTechnologyPanel.interactable = false;
+        }
+        else {
+            buttonMenuPanel.interactable = true;
+            buttonTechnologyPanel.interactable = true;
+        }
     }
 
     public void OnTechnologyPanelOpen()

@@ -19,9 +19,11 @@ public class Logic : MonoBehaviour
     UnityIntEvent changeOfPlayerEvent;
     [SerializeField]
     GameObject victoryPanel;
-
+    [SerializeField]
+    UnitController unitController;
     public ScoreManager scoreManager;
 #pragma warning restore 0649
+
     private Player[] players;
     public Player[] Players { get { return players; }}
 
@@ -29,21 +31,25 @@ public class Logic : MonoBehaviour
     int numberPlayers = 2;
     public int NumberPlayers { get { return numberPlayers; } set { numberPlayers = value; } }
     int turn = 1;
-
-
     public int Turn { get { return turn; } set { turn = value; } }
     int currentPlayer = 0;
     public int CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
     bool isEndOfGame = false;
     public bool IsEndOfGame { get { return isEndOfGame; } set { isEndOfGame = value; } }
-    int turnsToPlay = 10;
+    int turnsToPlay = 300;
     public int TurnsToPlay { get { return turnsToPlay; } set { turnsToPlay = value; } }
+    bool isThereAI = true;
+    public bool IsThereAI { get { return isThereAI; } set { isThereAI = value; } }
+    bool isCurrentPlayerAI  = false;
+    public bool IsCurrentPlayerAI { get { return isCurrentPlayerAI; } set { isCurrentPlayerAI = value; } }
 
+    AIPlayer aiPlayer;
     // Start is called before the first frame update
     void Awake()
     {
         //TO DO:
         //numberPlayers = PlayerPrefs.GetInt("NumberPlayers");
+        //isThereAI = PlayerPrefs.GetInt("IAPlayer") > 0;
         numberPlayers = 2;
         players = new Player[numberPlayers];
         initialPositions = new Tuple<int, int>[numberPlayers];
@@ -61,11 +67,12 @@ public class Logic : MonoBehaviour
 
             players[i] = new Player(unitManager, cityManager, technologyManager);
             players[i].SetGrid(gridCreator.HexGrid);
-            players[i].InstantiateIntialUnits(initialPositions[i]);
+            players[i].InstantiateInitialUnits(initialPositions[i]);
         }
         //unitManager.InstantiateIntialUnits();
         scoreManager = new ScoreManager(players);
         //scoreEvent.AddListener(scoreManager.OnScoreEvent);
+        aiPlayer = new AIPlayer(players[1], this);
     }
 
     internal void AddTechnology(TechnologyType technologyType)
@@ -82,28 +89,44 @@ public class Logic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isEndOfGame) return;
+
         if (Input.GetKeyUp(KeyCode.Space)) {
-            do {
-                ++currentPlayer;
-                if (currentPlayer == numberPlayers) {
-                    currentPlayer = 0;
-                    ++turn;
-                    changeOfTurnEvent.Invoke(turn);
-                    isEndOfGame = IsEndOfGameTurn();
-                }
-                isEndOfGame = isEndOfGame || CheckSurvivalEndOfGameTurn();
-                if (!isEndOfGame) {
-                    players[currentPlayer].ResetUnitMovement();
-                    players[currentPlayer].ProduceShields();
-                    changeOfPlayerEvent.Invoke(currentPlayer);
-                    players[currentPlayer].ProduceShields();
-                }
-                else {
-                    victoryPanel.SetActive(true);
-                    break;
-                }
-            } while (players[currentPlayer].IsDead);
+            NextPlayer();
         }
+
+        if(IsCurrentPlayerAI) {
+            aiPlayer.NextTask();
+            if (!aiPlayer.IsThereTasks()) {
+                NextPlayer();
+            }
+        }
+    }
+
+    void NextPlayer()
+    {
+        do {
+            ++currentPlayer;
+            if (currentPlayer == numberPlayers) {
+                currentPlayer = 0;
+                ++turn;
+                changeOfTurnEvent.Invoke(turn);
+                isEndOfGame = IsEndOfGameTurn();
+            }
+            isEndOfGame = isEndOfGame || CheckSurvivalEndOfGameTurn();
+            if (!isEndOfGame) {
+                players[currentPlayer].ResetUnitMovement();
+                players[currentPlayer].ProduceShields();
+                changeOfPlayerEvent.Invoke(currentPlayer);
+                players[currentPlayer].ProduceShields();
+                IsCurrentPlayerAI = isThereAI && currentPlayer == 1;
+                if (IsCurrentPlayerAI) aiPlayer.InitialTasks();
+            }
+            else {
+                victoryPanel.SetActive(true);
+                break;
+            }
+        } while (players[currentPlayer].IsDead);
     }
 
     internal bool IsEndOfGameTurn()
@@ -148,6 +171,7 @@ public class Logic : MonoBehaviour
     public void RemoveUnit(Unit unit)
     {
         players[unit.PlayerID].RemoveUnit(unit);
+        Destroy(unit.gameObject);
     }
 
     private bool IsCellFree(HexCoordinates hexCoordinates)

@@ -6,16 +6,16 @@ using static TechnologyInfo;
 
 public class Player
 {
-    UnitManager unitManager;
-    CityManager cityManager;
-    TechnologyManager technologyManager;
+    protected UnitManager unitManager;
+    protected CityManager cityManager;
+    protected TechnologyManager technologyManager;
     //uint shields = 0;
-    uint shields = 200;
+    protected uint shields = 200;
     public uint Shields { get { return shields; } set { shields = value; } }
-    int score = 0;
+    protected int score = 0;
     public int Score { get { return score; } set { score = value; } }
     public int PlayerID { get { return unitManager.PlayerID; } set { unitManager.PlayerID = value; } }
-    bool isDead = false;
+    protected bool isDead = false;
     public bool IsDead { get { return isDead; } set { isDead = value; } }
 
 
@@ -26,9 +26,14 @@ public class Player
         this.technologyManager = aTechnologyManager;
     }
 
-    internal void InstantiateIntialUnits(Tuple<int, int> initialPosition)
+    internal List<GameObject> GetUnits()
     {
-        unitManager.InstantiateIntialUnits(initialPosition);
+        return this.unitManager.Units;
+    }
+
+    internal void InstantiateInitialUnits(Tuple<int, int> initialPosition)
+    {
+        unitManager.InstantiateInitialUnits(initialPosition);
     }
 
     public void SetGrid(HexGrid hexGrid)

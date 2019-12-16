@@ -58,7 +58,7 @@ public class Unit : MonoBehaviour
     public void OnNewPosition()
     {
         float offsetX = gameObject.GetComponent<MeshFilter>().mesh.bounds.size.x * gameObject.transform.localScale.x * 0.25f;
-        float offsetY = gameObject.GetComponent<MeshFilter>().mesh.bounds.size.y * gameObject.transform.localScale.y * 2.5f;
+        float offsetY = gameObject.GetComponent<MeshFilter>().mesh.bounds.size.y * gameObject.transform.localScale.y * 2.0f;
         healthStatus.transform.position = new Vector3(gameObject.transform.position.x + offsetX, gameObject.transform.position.y + offsetY, gameObject.transform.position.z);        
     }
 

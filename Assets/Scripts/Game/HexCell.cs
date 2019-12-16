@@ -71,6 +71,19 @@ public class HexCell : MonoBehaviour
           Random.Range(0f, 1f)
       );*/
     }
+
+    public HexCell[] GetNeighbors()
+    {
+        return neighbors;
+    }
+
+    public HexCell GetRandomNeighbor()
+    {
+        int direction = Random.Range(0, 5);
+
+        return neighbors[direction];
+    }
+
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];

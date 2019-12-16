@@ -22,6 +22,8 @@ public class UnitManager : MonoBehaviour
     public int PlayerID { get { return playerID; } set { playerID = value; } }
 
     List<GameObject> unitInstances = new List<GameObject>();
+    public List<GameObject> Units { get { return unitInstances; } set { unitInstances = value; } }
+
     private Canvas unitCanvas;
 
     public void Awake()
@@ -29,7 +31,7 @@ public class UnitManager : MonoBehaviour
         unitCanvas = GetComponentInChildren<Canvas>();
     }
 
-    public void InstantiateIntialUnits(Tuple<int, int> initialPosition)
+    public void InstantiateInitialUnits(Tuple<int, int> initialPosition)
     {
         switch (playerID) {
             case 0:

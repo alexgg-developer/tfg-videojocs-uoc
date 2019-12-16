@@ -68,21 +68,7 @@ public class UnitController : MonoBehaviour
                             if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
                             if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT) return;
 
-                            if (Fight(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity)) {
-                                MoveUnit(selectedUnitGO, cell);
-                                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
-                                logic.RemoveUnit(goalUnit);
-                                Destroy(goalUnit.gameObject);
-                                if(thereIsCity) {
-                                    ConquerCity(currentPlayerID, goalCity.PlayerID, goalCity.ID);
-                                }
-                            }
-                            else {
-                                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
-                                logic.RemoveUnit(selectedUnit);
-                                Destroy(selectedUnitGO);
-                                Unselect();
-                            }
+                            FightLogic(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity, cell, goalCity);
                             return;
                         }
                         else {
@@ -111,12 +97,12 @@ public class UnitController : MonoBehaviour
                     if(DistanceFight(selectedUnit, goalUnit, isDefenderInCity)) {
                         scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                         logic.RemoveUnit(goalUnit);
-                        Destroy(goalUnit.gameObject);
                     }
                 }
             }
         }
     }
+
 
     private void ConquerCity(int conquererPlayerID, int defeatedPlayerID, int cityID)
     {
@@ -128,7 +114,7 @@ public class UnitController : MonoBehaviour
     {
         unitToMove.transform.SetParent(cellToMoveTo.transform);
         float offsetY = unitToMove.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.transform.localScale.y * 0.5f;
-        selectedUnitGO.transform.localPosition = new Vector3(0f, offsetY, 0f);
+        unitToMove.transform.localPosition = new Vector3(0f, offsetY, 0f);
         var unit = unitToMove.GetComponent<Unit>();
         --unit.MovementLeft;
         unit.OnNewPosition();
@@ -176,12 +162,32 @@ public class UnitController : MonoBehaviour
 
     public void SwitchSelectedCell(HexCell cell, int playerID)
     {
-        selectedCell.DisableHighlight();
-        selectedCell = cell;
-        cell.EnableHighlight(playerID);
+        if (selectedCell != null) {
+            selectedCell.DisableHighlight();
+            selectedCell = cell;
+            cell.EnableHighlight(playerID);
+        }
     }
 
-    bool Fight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
+
+    public void FightLogic(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, HexCell goalCell, City goalCity = null)
+    {
+        if (Fight(selectedUnit, goalUnit, isDefenderInCity)) {
+            MoveUnit(selectedUnit.gameObject, goalCell);
+            scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
+            logic.RemoveUnit(goalUnit);
+            if (isDefenderInCity) {
+                ConquerCity(currentPlayerID, goalCity.PlayerID, goalCity.ID);
+            }
+        }
+        else {
+            scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, goalUnit.PlayerID);
+            logic.RemoveUnit(selectedUnit);
+            Unselect();
+        }
+    }
+
+    public bool Fight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
     {
         bool hasWon = false;
         selectedUnit.HasAttacked = true;
@@ -251,7 +257,6 @@ public class UnitController : MonoBehaviour
             var cell = selectedUnitGO.GetComponentInParent<HexCell>();
             if (logic.BuildCity(cell.coordinates)) {
                 logic.RemoveUnit(unit);
-                Destroy(selectedUnitGO);
                 Unselect();
                 cell.SetResource(false);
             }

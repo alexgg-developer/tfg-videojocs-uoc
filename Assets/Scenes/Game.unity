@@ -4259,6 +4259,8 @@ MonoBehaviour:
   cityPanel: {fileID: 115003640}
   menuPanel: {fileID: 200486194}
   inMapResourcePanel: {fileID: 1138031323}
+  buttonTechnologyPanel: {fileID: 2130511097}
+  buttonMenuPanel: {fileID: 715712333}
 --- !u!1 &667187361
 GameObject:
   m_ObjectHideFlags: 0
@@ -11197,6 +11199,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   victoryPanel: {fileID: 411497258}
+  unitController: {fileID: 2000302717}
 --- !u!114 &2000302717
 MonoBehaviour:
   m_ObjectHideFlags: 0
