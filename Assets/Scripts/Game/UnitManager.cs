@@ -77,14 +77,14 @@ public class UnitManager : MonoBehaviour
         AddUnitInCell(cell, type);
     }
 
-    public void AddUnit(HexCoordinates hexCoordinates, UnitType type)
+    public Unit AddUnit(HexCoordinates hexCoordinates, UnitType type)
     {
         Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(hexCoordinates);
         HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
-        AddUnitInCell(cell, type);
+        return AddUnitInCell(cell, type);
     }
 
-    public void AddUnitInCell(HexCell cell, UnitType type)
+    public Unit AddUnitInCell(HexCell cell, UnitType type)
     {
         GameObject unitInstance = Instantiate(currentUnitPrefabs[(int)type], cell.transform);
         Unit unitComponent = unitInstance.GetComponent<Unit>();
@@ -97,6 +97,8 @@ public class UnitManager : MonoBehaviour
         label.rectTransform.SetParent(unitCanvas.transform, false);
         unitComponent.HealthStatus = label;
         unitComponent.OnNewPosition();
+
+        return unitComponent;
     }
 
     internal bool HasSettler()

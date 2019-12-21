@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -45,18 +44,19 @@ public class CityPanel : MonoBehaviour
     Logic logic;
     bool showUnits = true;
     int selectedButton = -1;
-    City selectedCity = null;
-    public City SelectedCity { get { return selectedCity; } set { selectedCity = value; } }
+    Button buyButton = null;
 
     List<UnitType> unitsAvailable = new List<UnitType>();
     List<BuildingType> buildingsAvailable = new List<BuildingType>();
 
+    City selectedCity = null;
+    public City SelectedCity { get { return selectedCity; } set { selectedCity = value; } }
 
     private void Awake()
     {
 
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
-
+        buyButton = descriptionSelectedPanel.GetComponentInChildren<Button>();
         //ShowUnitButtons();
     }
 
@@ -68,7 +68,7 @@ public class CityPanel : MonoBehaviour
     private void OnEnable()
     {
         SetUnitAvailability();
-        SetBuildingAvailability();        
+        SetBuildingAvailability();
 
         cityNameText.text = selectedCity.Name;
         shieldPerTurnText.text = selectedCity.ShieldsPerTurn().ToString() + " shields per turn";
@@ -114,13 +114,13 @@ public class CityPanel : MonoBehaviour
         }
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         Debug.Log("OnDisable");
         selectedButton = -1;
         descriptionSelectedPanel.SetActive(false);
     }
-    
+
     public void OnClickedBuyButton(int index)
     {
         if (showUnits) {
@@ -132,39 +132,24 @@ public class CityPanel : MonoBehaviour
                 descriptionSelectedText.text += unitStats[(int)unitType].Movement + " of movement.";
             }
             if (selectedButton == index) {
-                if (logic.IsThereEnoughShields(unitStats[(int)unitType].ShieldCost)) {
-                    if (logic.TryBuildingUnit(unitType, selectedCity)) {
-                        logic.TrySpendShields(unitStats[(int)unitType].ShieldCost);
-                        this.gameObject.SetActive(false);
-                    }
-                    else {
-                        descriptionSelectedText.text = ALREADY_UNIT_CITY;
-                    }
-                }
-                else {
-                    descriptionSelectedText.text = NOT_ENOUGH_SHIELDS;
-                }
+                BuySelectedButton();
             }
             else {
                 selectedButton = index;
                 descriptionSelectedPanel.SetActive(true);
+                buyButton.gameObject.SetActive(true);
             }
         }
         else {
             BuildingType buildingType = buildingsAvailable[index];
             descriptionSelectedText.text = buildingInfos[(int)buildingType].Description;
             if (selectedButton == index) {
-                if (!selectedCity.HasBuilding(buildingType)) {
-                    var shieldCost = buildingInfos[(int)buildingType].ShieldCost;
-                    if (logic.TrySpendShields(shieldCost)) {
-                        selectedCity.BuildBuilding(buildingType);
-                        this.gameObject.SetActive(false);
-                    }
-                }
+                BuySelectedButton();
             }
             else {
                 selectedButton = index;
                 descriptionSelectedPanel.SetActive(true);
+                buyButton.gameObject.SetActive(!selectedCity.HasBuilding(buildingType));
             }
         }
     }
@@ -228,5 +213,36 @@ public class CityPanel : MonoBehaviour
         }
         showUnitsButton.gameObject.SetActive(false);
         showBuildingsButton.gameObject.SetActive(true);
+    }
+
+    public void BuySelectedButton()
+    {
+        if (selectedButton == -1) return;
+
+        if (showUnits) {
+            UnitType unitType = unitsAvailable[selectedButton];
+            if (logic.IsThereEnoughShields(unitStats[(int)unitType].ShieldCost)) {
+                if (logic.TryBuildingUnit(unitType, selectedCity)) {
+                    logic.TrySpendShields(unitStats[(int)unitType].ShieldCost);
+                    this.gameObject.SetActive(false);
+                }
+                else {
+                    descriptionSelectedText.text = ALREADY_UNIT_CITY;
+                }
+            }
+            else {
+                descriptionSelectedText.text = NOT_ENOUGH_SHIELDS;
+            }
+        }
+        else {
+            BuildingType buildingType = buildingsAvailable[selectedButton];
+            if (!selectedCity.HasBuilding(buildingType)) {
+                var shieldCost = buildingInfos[(int)buildingType].ShieldCost;
+                if (logic.TrySpendShields(shieldCost)) {
+                    selectedCity.BuildBuilding(buildingType);
+                    this.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 }

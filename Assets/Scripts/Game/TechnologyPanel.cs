@@ -27,9 +27,11 @@ public class TechnologyPanel : MonoBehaviour
     UnityEvent OnOpenEvent;
 #pragma warning restore 0649
     const string NOT_ENOUGH_SHIELDS = "Not enough shields.";
+    const string ALREADY_RESEARCHED = "You already have that technology.";
 
     Logic logic;
     int selectedButton = -1;
+    Button buyButton;
 
     List<TechnologyType> technologiesAvailable = new List<TechnologyType>();
 
@@ -39,6 +41,7 @@ public class TechnologyPanel : MonoBehaviour
         technologiesAvailable.Add(TechnologyType.AGRICULTURE);
         technologiesAvailable.Add(TechnologyType.ENGINEERING);
         technologiesAvailable.Add(TechnologyType.NAVIGATION);
+        buyButton = descriptionSelectedPanel.GetComponentInChildren<Button>();
     }
 
     // Start is called before the first frame update
@@ -72,20 +75,44 @@ public class TechnologyPanel : MonoBehaviour
         TechnologyType technologyType = technologiesAvailable[index];
         descriptionSelectedText.text = technologyInfo[(int)technologyType].Description;
 
-        if (selectedButton == index && !logic.HasTechnology(technologyType)) {
+        if (!logic.HasTechnology(technologyType)) {
+            buyButton.gameObject.SetActive(true);
+        }
+        else {
+            buyButton.gameObject.SetActive(false);
+        }
+
+        if (selectedButton == index) {
+            BuySelectedButton();
+        }
+        else {
+            selectedButton = index;
+            descriptionSelectedPanel.SetActive(true);
+        }
+    }
+
+    public void BuySelectedButton()
+    {
+        if (selectedButton == -1) return;
+
+        TechnologyType technologyType = technologiesAvailable[selectedButton];
+        if (!logic.HasTechnology(technologyType)) {
             if (logic.IsThereEnoughShields(technologyInfo[(int)technologyType].ShieldCost)) {
                 logic.AddTechnology(technologyType);
                 logic.TrySpendShields(technologyInfo[(int)technologyType].ShieldCost);
                 ShowTechnologyButtons();
+                buyButton.gameObject.SetActive(false);
+                selectedButton = -1;
+                descriptionSelectedPanel.gameObject.SetActive(false);
             }
             else {
                 descriptionSelectedText.text = NOT_ENOUGH_SHIELDS;
             }
         }
         else {
-            selectedButton = index;
-            descriptionSelectedPanel.SetActive(true);
+            descriptionSelectedText.text = ALREADY_RESEARCHED;
         }
+
     }
 
 

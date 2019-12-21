@@ -132,7 +132,7 @@ public class UnitController : MonoBehaviour
                 int childs = cell.gameObject.transform.childCount;
                 for (int i = 0; i < childs; ++i) {
                     GameObject child = cell.gameObject.transform.GetChild(i).gameObject;
-                    Unit unit;
+                    Unit unit = null;
                     if (child.TryGetComponent<Unit>(out unit)) {
                         if (unit.PlayerID == currentPlayerID) {
                             Select(cell, unit);

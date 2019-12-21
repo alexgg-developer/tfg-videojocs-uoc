@@ -42,8 +42,11 @@ public class Logic : MonoBehaviour
     public bool IsThereAI { get { return isThereAI; } set { isThereAI = value; } }
     bool isCurrentPlayerAI  = false;
     public bool IsCurrentPlayerAI { get { return isCurrentPlayerAI; } set { isCurrentPlayerAI = value; } }
+    /*private Unit lastUnitBuilt = null;
+    public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = value; } }*/
 
     AIPlayer aiPlayer;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -152,9 +155,11 @@ public class Logic : MonoBehaviour
 
     internal bool TryBuildingUnit(UnitStats.UnitType unitType, City city)
     {
-        var hexCoordinates = city.gameObject.GetComponentInParent<HexCell>().coordinates;
+        var cell = city.gameObject.GetComponentInParent<HexCell>();
+        var hexCoordinates = cell.coordinates;
         if(!IsThereUnit(hexCoordinates)) {
-            players[currentPlayer].AddUnit(unitType, hexCoordinates);
+            var lastUnitBuilt = players[currentPlayer].AddUnit(unitType, hexCoordinates);
+            unitController.Select(cell, lastUnitBuilt);
             return true;
         }
         return false;
