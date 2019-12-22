@@ -24,11 +24,11 @@ public class UnitManager : MonoBehaviour
     List<GameObject> unitInstances = new List<GameObject>();
     public List<GameObject> Units { get { return unitInstances; } set { unitInstances = value; } }
 
-    private Canvas unitCanvas;
+    
 
     public void Awake()
     {
-        unitCanvas = GetComponentInChildren<Canvas>();
+        
     }
 
     public void InstantiateInitialUnits(Tuple<int, int> initialPosition)
@@ -93,9 +93,6 @@ public class UnitManager : MonoBehaviour
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);
 
-        Text label = Instantiate<Text>(healthStatsPrefab);
-        label.rectTransform.SetParent(unitCanvas.transform, false);
-        unitComponent.HealthStatus = label;
         unitComponent.OnNewPosition();
 
         return unitComponent;
