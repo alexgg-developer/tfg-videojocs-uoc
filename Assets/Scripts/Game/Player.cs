@@ -67,9 +67,9 @@ public class Player
         Shields += CalculateShieldsPerTurn();
     }
 
-    internal Unit AddUnit(UnitStats.UnitType unitType, HexCoordinates hexCoordinates)
+    internal Unit AddUnit(UnitStats.UnitType unitType, HexCell cell)
     {
-        return unitManager.AddUnit(hexCoordinates, unitType);
+        return unitManager.AddUnitInCell(cell, unitType);
     }
 
     internal City RemoveCity(int cityID)

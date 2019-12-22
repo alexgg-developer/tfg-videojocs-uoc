@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Wall
   m_EditorClassIdentifier: 
   Icon: stone-wall
-  Description: Barn grows your city by 1 population.
+  Description: Wall give a defensive bonus to units garrisoned in the city.
   ShieldCost: 15
   Type: 2

@@ -66,7 +66,7 @@ public class UnitController : MonoBehaviour
                             }
 
                             if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
-                            if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT) return;
+                            if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT || selectedUnit.Type == UnitStats.UnitType.SETTLER) return;
 
                             FightLogic(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity, cell, goalCity);
                             return;

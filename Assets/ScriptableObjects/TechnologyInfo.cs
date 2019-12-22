@@ -9,6 +9,6 @@ public class TechnologyInfo : ScriptableObject
     public string Description;
     public uint ShieldCost;
 
-    public enum TechnologyType { AGRICULTURE, NAVIGATION, ENGINEERING, SIZE };
+    public enum TechnologyType { AGRICULTURE, ENGINEERING, NAVIGATION, SIZE };
     public TechnologyType Type;
 }

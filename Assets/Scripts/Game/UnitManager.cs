@@ -77,12 +77,12 @@ public class UnitManager : MonoBehaviour
         AddUnitInCell(cell, type);
     }
 
-    public Unit AddUnit(HexCoordinates hexCoordinates, UnitType type)
+    /*public Unit AddUnit(HexCoordinates hexCoordinates, UnitType type)
     {
         Tuple<int, int> offsetCoordinates = HexCoordinates.ToOffsetCoordinates(hexCoordinates);
         HexCell cell = grid.GetCell(offsetCoordinates.Item1, offsetCoordinates.Item2);
         return AddUnitInCell(cell, type);
-    }
+    }*/
 
     public Unit AddUnitInCell(HexCell cell, UnitType type)
     {

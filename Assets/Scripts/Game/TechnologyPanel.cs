@@ -39,8 +39,8 @@ public class TechnologyPanel : MonoBehaviour
     {
         //ShowUnitButtons();
         technologiesAvailable.Add(TechnologyType.AGRICULTURE);
-        technologiesAvailable.Add(TechnologyType.ENGINEERING);
         technologiesAvailable.Add(TechnologyType.NAVIGATION);
+        technologiesAvailable.Add(TechnologyType.ENGINEERING);
         buyButton = descriptionSelectedPanel.GetComponentInChildren<Button>();
     }
 

@@ -36,7 +36,7 @@ public class Logic : MonoBehaviour
     public int CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
     bool isEndOfGame = false;
     public bool IsEndOfGame { get { return isEndOfGame; } set { isEndOfGame = value; } }
-    int turnsToPlay = 300;
+    int turnsToPlay = 200;
     public int TurnsToPlay { get { return turnsToPlay; } set { turnsToPlay = value; } }
     bool isThereAI = true;
     public bool IsThereAI { get { return isThereAI; } set { isThereAI = value; } }
@@ -158,7 +158,7 @@ public class Logic : MonoBehaviour
         var cell = city.gameObject.GetComponentInParent<HexCell>();
         var hexCoordinates = cell.coordinates;
         if(!IsThereUnit(hexCoordinates)) {
-            var lastUnitBuilt = players[currentPlayer].AddUnit(unitType, hexCoordinates);
+            var lastUnitBuilt = players[currentPlayer].AddUnit(unitType, cell);
             unitController.Select(cell, lastUnitBuilt);
             return true;
         }
