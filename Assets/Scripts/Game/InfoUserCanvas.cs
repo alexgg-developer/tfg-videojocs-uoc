@@ -14,6 +14,8 @@ public class InfoUserCanvas : MonoBehaviour
     [SerializeField]
     GameObject inMapResourcePanel;
     [SerializeField]
+    GameObject controlsPanel;
+    [SerializeField]
     Button buttonTechnologyPanel;
     [SerializeField]
     Button buttonMenuPanel;
@@ -32,6 +34,7 @@ public class InfoUserCanvas : MonoBehaviour
         cityPanel.SetActive(false);
         menuPanel.SetActive(false);
         inMapResourcePanel.SetActive(false);
+        controlsPanel.SetActive(false);
     }
 
     public void SwitchTechnologyPanel()
@@ -47,6 +50,14 @@ public class InfoUserCanvas : MonoBehaviour
         ClosePanels();
         if (!logic.IsEndOfGame) {
             menuPanel.SetActive(!menuPanel.activeInHierarchy);
+        }
+    }
+
+    public void SwitchControlPanel()
+    {
+        ClosePanels();
+        if (!logic.IsEndOfGame) {
+            controlsPanel.SetActive(!controlsPanel.activeInHierarchy);
         }
     }
 
