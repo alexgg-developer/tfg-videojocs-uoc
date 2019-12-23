@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InfoUserCanvas : MonoBehaviour
@@ -15,6 +16,8 @@ public class InfoUserCanvas : MonoBehaviour
     GameObject inMapResourcePanel;
     [SerializeField]
     GameObject controlsPanel;
+    [SerializeField]
+    GameObject unitPanel;
     [SerializeField]
     Button buttonTechnologyPanel;
     [SerializeField]
@@ -35,6 +38,7 @@ public class InfoUserCanvas : MonoBehaviour
         menuPanel.SetActive(false);
         inMapResourcePanel.SetActive(false);
         controlsPanel.SetActive(false);
+        unitPanel.SetActive(false);
     }
 
     public void SwitchTechnologyPanel()
@@ -91,5 +95,26 @@ public class InfoUserCanvas : MonoBehaviour
     public void OnCityPanelOpen()
     {
         technologyPanel.SetActive(false);
+    }
+
+    public void OpenUnitPanel(Unit selectedUnit)
+    {
+        ClosePanels();
+        if (!logic.IsEndOfGame) {
+            unitPanel.GetComponent<UnitPanel>().SelectedUnit = selectedUnit;
+            unitPanel.SetActive(true);
+        }
+    }
+
+    internal void CloseUnitPanel()
+    {
+        if (unitPanel.activeInHierarchy) {
+            unitPanel.SetActive(false);
+        }
+    }
+
+    public void UpdateUnitPanel()
+    {
+        unitPanel.GetComponent<UnitPanel>().UpdateInfo();
     }
 }

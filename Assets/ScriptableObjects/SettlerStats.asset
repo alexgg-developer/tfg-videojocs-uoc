@@ -21,3 +21,4 @@ MonoBehaviour:
     themselves.
   ShieldCost: 3
   Type: 1
+  Action: 1

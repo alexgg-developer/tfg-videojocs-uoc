@@ -14,6 +14,8 @@ public class UnitController : MonoBehaviour
     UnityScoreEvent scoreEvent;
     [SerializeField]
     HexGrid hexGrid;
+    [SerializeField]
+    InfoUserCanvas infoUserCanvas;
 #pragma warning restore 0649
 
     Logic logic;
@@ -119,6 +121,7 @@ public class UnitController : MonoBehaviour
         --unit.MovementLeft;
         unit.OnNewPosition();
         SwitchSelectedCell(cellToMoveTo, unit.PlayerID);
+        infoUserCanvas.UpdateUnitPanel();
 
     } 
 
@@ -149,6 +152,9 @@ public class UnitController : MonoBehaviour
         cell.EnableHighlight(unit.PlayerID);
         selectedUnitGO = unit.gameObject;
         selectedCell = cell;
+        if(infoUserCanvas != null) {
+            infoUserCanvas.OpenUnitPanel(unit);
+        }
     }
 
     public void Unselect()
@@ -158,6 +164,9 @@ public class UnitController : MonoBehaviour
             selectedCell = null;
         }
         selectedUnitGO = null;
+        if (infoUserCanvas != null) {
+            infoUserCanvas.CloseUnitPanel();
+        }
     }
 
     public void SwitchSelectedCell(HexCell cell, int playerID)

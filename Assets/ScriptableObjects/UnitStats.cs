@@ -14,5 +14,9 @@ public class UnitStats : ScriptableObject
     public uint ShieldCost;
 
     public enum UnitType { WARRIOR, SETTLER, HORSEMAN, SHIP, ARCHER, CATAPULT, SIZE };
+    public enum UnitAction { HEAL, BUILD_CITY, SIZE };
+
     public UnitType Type;
+    public UnitAction Action;
+    //public List<UnitAction> ActionsUnit = new List<UnitAction>();
 }

@@ -17,11 +17,13 @@ public class Unit : MonoBehaviour
 
     private int id;
     public int ID { get { return id; } set { id = value; } }
-
     public float Attack { get { return unitStats.Attack; } }
     public float Defense { get { return unitStats.Defense; } }
+    public int Health { get { return unitStats.Health; } }
+    public float Movement { get { return unitStats.Movement; } }
     public UnitType Type { get { return unitStats.Type; } }
-    private Vector3 gridPosition = new Vector3(0f, 0f, 0f);
+    //public List<UnitAction> ActionsUnit { get { return unitStats.ActionsUnit; } }
+    public UnitAction Action { get { return unitStats.Action; } }
     private int currentHealth;
     public int CurrentHealth {
         get { return currentHealth; }
@@ -37,6 +39,11 @@ public class Unit : MonoBehaviour
     private bool hasAttacked = false;
     public bool HasAttacked { get { return hasAttacked; } set { hasAttacked = value; } }
     
+    private Vector3 gridPosition = new Vector3(0f, 0f, 0f);
+
+    //public const uint MAX_HEALTH = 10;
+    public const int HEAL_RATIO = 3;
+
     void Awake()
     {
         ID = nextID++;
