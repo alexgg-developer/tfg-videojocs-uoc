@@ -152,11 +152,13 @@ public class UnitPanel : MonoBehaviour
 
     internal void UpdateInfo()
     {
-        attackText.text = "Attack - " + selectedUnit.Attack.ToString();
-        defenseText.text = "Defense - " + selectedUnit.Defense.ToString();
-        lifeText.text = "Life - " + selectedUnit.CurrentHealth.ToString() + "/" + selectedUnit.Health.ToString();
-        movementText.text = "Movement - " + selectedUnit.MovementLeft.ToString() + "/" + selectedUnit.Movement.ToString();
+        if (selectedUnit) {
+            attackText.text = "Attack - " + selectedUnit.Attack.ToString();
+            defenseText.text = "Defense - " + selectedUnit.Defense.ToString();
+            lifeText.text = "Life - " + selectedUnit.CurrentHealth.ToString() + "/" + selectedUnit.Health.ToString();
+            movementText.text = "Movement - " + selectedUnit.MovementLeft.ToString() + "/" + selectedUnit.Movement.ToString();
 
+        }
         descriptionSelectedPanel.gameObject.SetActive(false);
     }
 }

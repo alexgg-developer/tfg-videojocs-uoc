@@ -50,9 +50,9 @@ public class Logic : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        //TO DO:
         //numberPlayers = PlayerPrefs.GetInt("NumberPlayers");
-        //isThereAI = PlayerPrefs.GetInt("IAPlayer") > 0;
+        isThereAI = PlayerPrefs.GetInt("IAPlayer") > 0;
+        turnsToPlay = PlayerPrefs.GetInt("Turns");
         numberPlayers = 2;
         players = new Player[numberPlayers];
         initialPositions = new Tuple<int, int>[numberPlayers];

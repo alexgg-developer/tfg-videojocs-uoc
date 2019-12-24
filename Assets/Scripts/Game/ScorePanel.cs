@@ -6,8 +6,8 @@ public class ScorePanel : MonoBehaviour
 #pragma warning disable 0649
     [SerializeField]
     Text[] playerTexts;
-    [SerializeField]
-    Text scoreTurnText;
+    //[SerializeField]
+    //Text scoreTurnText;
 #pragma warning restore 0649
     Logic logic;
     int[] lastScore;
@@ -28,7 +28,7 @@ public class ScorePanel : MonoBehaviour
 
     public void OnChangeOfTurn(int newTurn)
     {
-        scoreTurnText.text = "Scores - Turn " + newTurn;
+        //scoreTurnText.text = "Scores - Turn " + newTurn;
         for(int i = 0; i < logic.NumberPlayers; ++i) {
             //playerTexts[i].fontStyle = FontStyle.Normal;
             playerTexts[logic.CurrentPlayer].fontSize = 12;

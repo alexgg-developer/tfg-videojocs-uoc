@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    private void Start()
+    {
+        PlayerPrefs.SetInt("Turns", 120);
+        PlayerPrefs.SetInt("IAPlayer", 1);
+    }
     public void PlayGame()
     {
         SceneManager.LoadScene(1);
