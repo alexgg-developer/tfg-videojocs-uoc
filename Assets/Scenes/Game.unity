@@ -15165,6 +15165,21 @@ MonoBehaviour:
         m_CallState: 2
   victoryPanel: {fileID: 411497258}
   unitController: {fileID: 2000302717}
+  unitStats:
+  - {fileID: 11400000, guid: 191b2a746430db14c88d89ebb139f78d, type: 2}
+  - {fileID: 11400000, guid: 16b768b414676b140951ff4ba681a403, type: 2}
+  - {fileID: 11400000, guid: 940de84ada860b04fa47f1dfe8459307, type: 2}
+  - {fileID: 11400000, guid: 5da45a5de20699f43a54d7c0c291ad39, type: 2}
+  - {fileID: 11400000, guid: 52eae74cb72b65e469693bb1c32098a4, type: 2}
+  - {fileID: 11400000, guid: 88ffee05f5a36a94592f3521c951f617, type: 2}
+  buildingInfo:
+  - {fileID: 11400000, guid: d283ad8a0445c564ea59f2cbce5adeaf, type: 2}
+  - {fileID: 11400000, guid: 0bdb4fae01fe61549b033156bbdc2c1d, type: 2}
+  - {fileID: 11400000, guid: c37580ab8dd00fc408ad8c76db792ac1, type: 2}
+  technologyInfo:
+  - {fileID: 11400000, guid: c8bf853b094f76b4ebace14d78318f54, type: 2}
+  - {fileID: 11400000, guid: de76d01507d0a0b44a0f1e60922826fc, type: 2}
+  - {fileID: 11400000, guid: fe7bea8f073eacf479fdc021e9b3e256, type: 2}
 --- !u!114 &2000302717
 MonoBehaviour:
   m_ObjectHideFlags: 0

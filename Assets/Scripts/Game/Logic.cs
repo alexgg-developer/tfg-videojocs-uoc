@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static BuildingInfo;
 using static ScoreManager;
 using static TechnologyInfo;
+using static UnitStats;
 
 [System.Serializable] public class UnityIntEvent : UnityEvent<int> { }
 
@@ -21,8 +23,14 @@ public class Logic : MonoBehaviour
     GameObject victoryPanel;
     [SerializeField]
     UnitController unitController;
-    public ScoreManager scoreManager;
+    [SerializeField]
+    UnitStats[] unitStats;
+    [SerializeField]
+    BuildingInfo[] buildingInfo;
+    [SerializeField]
+    TechnologyInfo[] technologyInfo;
 #pragma warning restore 0649
+    public ScoreManager scoreManager;
 
     private Player[] players;
     public Player[] Players { get { return players; }}
@@ -42,8 +50,10 @@ public class Logic : MonoBehaviour
     public bool IsThereAI { get { return isThereAI; } set { isThereAI = value; } }
     bool isCurrentPlayerAI  = false;
     public bool IsCurrentPlayerAI { get { return isCurrentPlayerAI; } set { isCurrentPlayerAI = value; } }
+
+
     /*private Unit lastUnitBuilt = null;
-    public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = value; } }*/
+public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = value; } }*/
 
     AIPlayer aiPlayer;
 
@@ -75,7 +85,72 @@ public class Logic : MonoBehaviour
         //unitManager.InstantiateIntialUnits();
         scoreManager = new ScoreManager(players);
         //scoreEvent.AddListener(scoreManager.OnScoreEvent);
-        aiPlayer = new AIPlayer(players[1], this);
+        if (IsThereAI) {
+            aiPlayer = new AIPlayer(players[1], this, unitStats);
+        }
+    }
+
+    internal List<BuildingType> GetBuildingsAvailable(City selectedCity)
+    {
+        List<BuildingType> buildingsAvailable = new List<BuildingType>();
+
+        if (HasTechnology(TechnologyType.AGRICULTURE)) {
+            buildingsAvailable.Add(BuildingType.BARN);
+        }
+        if (HasTechnology(TechnologyType.NAVIGATION)) {
+            buildingsAvailable.Add(BuildingType.DOCK);
+        }
+        if (HasTechnology(TechnologyType.ENGINEERING)) {
+            buildingsAvailable.Add(BuildingType.WALL);
+        }
+
+        return buildingsAvailable;
+    }
+
+    internal uint GetCostBuilding(BuildingType buildingType)
+    {
+        return buildingInfo[(int)buildingType].ShieldCost;
+    }
+
+    internal List<UnitType> GetUnitsAvailable()
+    {
+        List<UnitType> unitsAvailable = new List<UnitStats.UnitType>();
+
+        unitsAvailable.Add(UnitType.WARRIOR);
+        unitsAvailable.Add(UnitType.SETTLER);
+        if (HasTechnology(TechnologyType.AGRICULTURE)) {
+            unitsAvailable.Add(UnitType.HORSEMAN);
+        }
+        if (HasTechnology(TechnologyType.NAVIGATION)) {
+            unitsAvailable.Add(UnitType.SHIP);
+        }
+        if (HasTechnology(TechnologyType.ENGINEERING)) {
+            unitsAvailable.Add(UnitType.CATAPULT);
+            unitsAvailable.Add(UnitType.ARCHER);
+        }
+
+        return unitsAvailable;
+    }
+
+    internal uint GetCostTechnology(TechnologyType technologyType)
+    {
+        return technologyInfo[(int)technologyType].ShieldCost;
+    }
+
+    internal List<TechnologyType> GetTechnologiesLeft()
+    {
+        List<TechnologyType> technologiesLeft = new List<TechnologyType>();
+        if (!HasTechnology(TechnologyType.AGRICULTURE)) {
+            technologiesLeft.Add(TechnologyType.AGRICULTURE);
+        }
+        if (!HasTechnology(TechnologyType.NAVIGATION)) {
+            technologiesLeft.Add(TechnologyType.NAVIGATION);
+        }
+        if (!HasTechnology(TechnologyType.ENGINEERING)) {
+            technologiesLeft.Add(TechnologyType.ENGINEERING);
+        }
+
+        return technologiesLeft;
     }
 
     internal void AddTechnology(TechnologyType technologyType)
@@ -253,5 +328,11 @@ public class Logic : MonoBehaviour
         var city = players[currentPlayer].FindNearestCity(resourceCoordinates);
 
         return city;
+    }
+
+
+    internal List<City> GetCities()
+    {
+        return players[currentPlayer].GetCities();
     }
 }

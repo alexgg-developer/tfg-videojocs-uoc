@@ -19,6 +19,6 @@ MonoBehaviour:
   Icon: cartwheel
   Description: Settlers are used to buiild new cities. It cannot attack or defense
     themselves.
-  ShieldCost: 3
+  ShieldCost: 16
   Type: 1
   Action: 1

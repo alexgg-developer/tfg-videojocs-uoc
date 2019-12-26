@@ -105,4 +105,9 @@ public class CityManager : MonoBehaviour
 
         return nearestCity;
     }
+
+    internal List<City> GetCities()
+    {
+        return cities;
+    }
 }

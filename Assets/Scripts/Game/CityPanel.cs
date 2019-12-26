@@ -99,19 +99,7 @@ public class CityPanel : MonoBehaviour
 
     private void SetUnitAvailability()
     {
-        unitsAvailable.Clear();
-        unitsAvailable.Add(UnitType.WARRIOR);
-        unitsAvailable.Add(UnitType.SETTLER);
-        if (logic.HasTechnology(TechnologyType.AGRICULTURE)) {
-            unitsAvailable.Add(UnitType.HORSEMAN);
-        }
-        if (logic.HasTechnology(TechnologyType.NAVIGATION)) {
-            unitsAvailable.Add(UnitType.SHIP);
-        }
-        if (logic.HasTechnology(TechnologyType.ENGINEERING)) {
-            unitsAvailable.Add(UnitType.CATAPULT);
-            unitsAvailable.Add(UnitType.ARCHER);
-        }
+        unitsAvailable = logic.GetUnitsAvailable();
     }
 
     private void OnDisable()

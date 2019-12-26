@@ -105,4 +105,9 @@ public class Player
         var city = cityManager.FindNearestCity(resourceCoordinates);
         return city;
     }
+
+    internal List<City> GetCities()
+    {
+        return cityManager.GetCities();
+    }
 }

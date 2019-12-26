@@ -181,10 +181,12 @@ public class UnitController : MonoBehaviour
 
     public void FightLogic(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, HexCell goalCell, City goalCity = null)
     {
-        if (Fight(selectedUnit, goalUnit, isDefenderInCity)) {
-            MoveUnit(selectedUnit.gameObject, goalCell);
-            scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
-            logic.RemoveUnit(goalUnit);
+        if (goalUnit == null || Fight(selectedUnit, goalUnit, isDefenderInCity)) {
+            MoveUnit(selectedUnit.gameObject, goalCell);            
+            if (goalUnit != null) {
+                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
+                logic.RemoveUnit(goalUnit);
+            }
             if (isDefenderInCity) {
                 ConquerCity(currentPlayerID, goalCity.PlayerID, goalCity.ID);
             }
