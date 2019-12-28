@@ -16,7 +16,6 @@ public class AIPlayer
     //int currentTask = 0;
     Queue<Action> tasks = new Queue<Action>();
     enum ScheduledTask { NONE, BUILD_UNIT, BUILD_BUILDING, INVESTIGATE };
-    uint indexScheduledTask = 0;
     ScheduledTask currentScheduledTask = ScheduledTask.NONE;
 
     public AIPlayer(Player playerToControl, Logic givenLogic, UnitStats[] givenUnitStats)

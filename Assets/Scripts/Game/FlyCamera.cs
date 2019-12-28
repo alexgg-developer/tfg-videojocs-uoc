@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class FlyCamera : MonoBehaviour
 {
@@ -20,21 +21,30 @@ public class FlyCamera : MonoBehaviour
     public float camSens = 0.25f; //How sensitive it with mouse
     private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
     private float totalRun = 1.0f;
-    Logic logic;
+
+    float zoom = 0.7f;
+    public float stickMinZoom, stickMaxZoom;
+    public float swivelMinZoom, swivelMaxZoom;
+    public float moveSpeedMinZoom = 400, moveSpeedMaxZoom = 100;
 
     void Start()
     {
-        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
     }
 
     void Update()
     {
-        if (logic.IsEndOfGame) return;
+        //if (logic.IsEndOfGame) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (Input.GetMouseButtonDown(0)) {
+        /*float zoomDelta = Input.GetAxis("Mouse ScrollWheel");
+        if (zoomDelta != 0f) {
+            AdjustZoom(zoomDelta);
+        }*/
+
+        if (Input.GetMouseButtonDown(1)) {
             lastMouse = Input.mousePosition;
         }
-        else if (Input.GetMouseButton(0)) {
+        else if (Input.GetMouseButton(1)) {
             lastMouse = Input.mousePosition - lastMouse;
             lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
             lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x, transform.eulerAngles.y + lastMouse.y, 0);
@@ -95,4 +105,17 @@ public class FlyCamera : MonoBehaviour
         }
         return p_Velocity;
     }
+
+    void AdjustZoom(float delta)
+    {
+        zoom = Mathf.Clamp01(zoom + delta);
+        UpdateZoom();
+    }
+
+    void UpdateZoom()
+    {
+        float distance = Mathf.Lerp(stickMinZoom, stickMaxZoom, zoom);
+        gameObject.transform.localPosition = new Vector3(0f, 0f, distance);
+    }
+
 }
