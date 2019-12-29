@@ -1,20 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class HexMetrics
 {
+    public const float outerToInner = 0.866025404f;
+    public const float innerToOuter = 1f / outerToInner;
     public const float outerRadius = 10f;
-    public const float innerRadius = outerRadius * 0.866025404f;
+    public const float innerRadius = outerRadius * outerToInner;
     public const float solidFactor = 0.8f;
     public const float blendFactor = 1f - solidFactor;
     public const float elevationStep = 1f;
     public const int terracesPerSlope = 2;
     public const int terraceSteps = terracesPerSlope * 2 + 1;
-    public const float cellPerturbStrength = 4f;
+    //public const float cellPerturbStrength = 4f;
+    public const float cellPerturbStrength = 0f;
     public const float noiseScale = 0.003f;
     public const float elevationPerturbStrength = 1.5f;
     public const int chunkSizeX = 4, chunkSizeZ = 4;
+    public const float streamBedElevationOffset = -1f;
 
     public static Texture2D noiseSource;
 
@@ -97,5 +102,12 @@ public static class HexMetrics
             position.x * noiseScale,
             position.z * noiseScale
         );
+    }
+
+    public static Vector3 GetSolidEdgeMiddle(HexDirection direction)
+    {
+        return
+            (corners[(int)direction] + corners[(int)direction + 1]) *
+            (0.5f * solidFactor);
     }
 }

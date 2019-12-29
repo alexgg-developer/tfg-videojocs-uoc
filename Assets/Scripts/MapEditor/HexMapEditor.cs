@@ -15,12 +15,22 @@ public class HexMapEditor : MonoBehaviour
     private int MaxElevation;
 #pragma warning restore 0649
 
+    enum OptionalToggle
+    {
+        Ignore, Yes, No
+    }
+
+    OptionalToggle riverMode;
 
     private Color[] colors;
     private Color activeColor;
     int activeElevation;
     bool applyColor = true;
     private bool applyElevation = true;
+
+    bool isDrag;
+    HexDirection dragDirection;
+    HexCell previousCell;
 
     void Awake()
     {
@@ -40,6 +50,9 @@ public class HexMapEditor : MonoBehaviour
             !EventSystem.current.IsPointerOverGameObject()) {
             HandleInput();
         }
+        else {
+            previousCell = null;
+        }
     }
 
     void HandleInput()
@@ -49,8 +62,35 @@ public class HexMapEditor : MonoBehaviour
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit)) {
-            EditCell(hexGrid.GetCell(hit.point));
+            HexCell currentCell = hexGrid.GetCell(hit.point);
+            if (previousCell && previousCell != currentCell) {
+                ValidateDrag(currentCell);
+            }
+            else {
+                isDrag = false;
+            }
+            EditCell(currentCell);
+            previousCell = currentCell;
         }
+        else {
+            previousCell = null;
+        }
+    }
+
+    void ValidateDrag(HexCell currentCell)
+    {
+        for (
+            dragDirection = HexDirection.NE;
+            dragDirection <= HexDirection.NW;
+            dragDirection++
+        ) 
+        {
+            if (previousCell.GetNeighbor(dragDirection) == currentCell) {
+                isDrag = true;
+                return;
+            }
+        }
+        isDrag = false;
     }
 
     public void CreateGrid()
@@ -60,12 +100,13 @@ public class HexMapEditor : MonoBehaviour
         int cellsInX = chunksX * HexMetrics.chunkSizeX;
         for (int i = 0; i < chunksZ * HexMetrics.chunkSizeZ; ++i) {
             for (int j = 0; j < cellsInX; ++j) {
-                hexCells[i * cellsInX + j].color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
-                hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
-                float random = Random.value;
+                //hexCells[i * cellsInX + j].Color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
+                hexCells[i * cellsInX + j].Color = colors[0];
+                //hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
+                /*float random = Random.value;
                 if (random <= 0.12f) {
                     hexCells[i * cellsInX + j].SetResource(true);
-                }
+                }*/
             }
         }
         hexGrid.Refresh();
@@ -73,13 +114,20 @@ public class HexMapEditor : MonoBehaviour
 
     void EditCell(HexCell cell)
     {
-        if (applyColor) {
-            cell.color = activeColor;
-        }
-        if (applyElevation) {
-            cell.Elevation = activeElevation;
-        }
-        hexGrid.Refresh();
+		if (cell) {
+			if (applyColor) {
+				cell.Color = activeColor;
+			}
+			if (applyElevation) {
+				cell.Elevation = activeElevation;
+			}
+			if (riverMode == OptionalToggle.No) {
+				cell.RemoveRiver();
+			}
+			else if (isDrag && riverMode == OptionalToggle.Yes) {
+				previousCell.SetOutgoingRiver(dragDirection);
+			}
+		}
     }
 
     public void SelectColor(int index)
@@ -99,5 +147,10 @@ public class HexMapEditor : MonoBehaviour
     public void SetApplyElevation(bool toggle)
     {
         applyElevation = toggle;
+    }
+
+    public void SetRiverMode(int mode)
+    {
+        riverMode = (OptionalToggle)mode;
     }
 }
