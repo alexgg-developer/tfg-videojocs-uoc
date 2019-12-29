@@ -211,6 +211,16 @@ public class HexCell : MonoBehaviour
         }
     }
 
+    public float RiverSurfaceY
+    {
+        get
+        {
+            return
+                (elevation + HexMetrics.riverSurfaceElevationOffset) *
+                HexMetrics.elevationStep;
+        }
+    }
+
     #endregion
 
 

@@ -14,12 +14,13 @@ public static class HexMetrics
     public const float elevationStep = 1f;
     public const int terracesPerSlope = 2;
     public const int terraceSteps = terracesPerSlope * 2 + 1;
-    //public const float cellPerturbStrength = 4f;
-    public const float cellPerturbStrength = 0f;
+    public const float cellPerturbStrength = 4f;
+    //public const float cellPerturbStrength = 0f;
     public const float noiseScale = 0.003f;
     public const float elevationPerturbStrength = 1.5f;
     public const int chunkSizeX = 4, chunkSizeZ = 4;
-    public const float streamBedElevationOffset = -1f;
+    public const float streamBedElevationOffset = -1.75f;
+    public const float riverSurfaceElevationOffset = -0.5f;
 
     public static Texture2D noiseSource;
 
@@ -109,5 +110,16 @@ public static class HexMetrics
         return
             (corners[(int)direction] + corners[(int)direction + 1]) *
             (0.5f * solidFactor);
+    }
+
+
+    public static Vector3 Perturb(Vector3 position)
+    {
+        Vector4 sample = HexMetrics.SampleNoise(position);
+        position.x += (sample.x * 2f - 1f) * cellPerturbStrength;
+        //position.y += (sample.y * 2f - 1f) * HexMetrics.cellPerturbStrength;
+        position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
+
+        return position;
     }
 }
