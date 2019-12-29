@@ -74,12 +74,12 @@ public class HexGridChunk : MonoBehaviour
         Vector3 center = cell.Position;
         EdgeVertices e = new EdgeVertices(
             center + HexMetrics.GetFirstSolidCorner(direction),
-            center + HexMetrics.GetSecondSolidCorner(direction),
-            0.25f
+            center + HexMetrics.GetSecondSolidCorner(direction)
         );
 
         if (cell.HasRiver) {
             if (cell.HasRiverThroughEdge(direction)) {
+                e.v3.y = cell.StreamBedY;
                 if (cell.HasRiverBeginOrEnd) {
                     TriangulateWithRiverBeginOrEnd(direction, cell, center, e);
                 }
