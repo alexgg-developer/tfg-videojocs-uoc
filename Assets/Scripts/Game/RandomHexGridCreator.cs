@@ -31,7 +31,7 @@ public class RandomHexGridCreator : MonoBehaviour
         int cellsInX = chunksX * HexMetrics.chunkSizeX;
         for (int i = 0; i < chunksZ * HexMetrics.chunkSizeZ; ++i) {
             for (int j = 0; j < cellsInX; ++j) {
-                hexCells[i * cellsInX + j].Color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
+                hexCells[i * cellsInX + j].TerrainType = (TerrainTypes)Random.Range(0, (int)TerrainTypes.SIZE);
                 hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
                 float random = Random.value;
                 if (random <= 0.12f) {

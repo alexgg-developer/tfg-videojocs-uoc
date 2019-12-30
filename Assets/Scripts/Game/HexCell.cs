@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static HexGrid;
 using static HexMetrics;
 using static MapResource;
 
@@ -16,16 +17,26 @@ public class HexCell : MonoBehaviour
     public HexCoordinates coordinates;
     public HexGridChunk chunk;
 
-    private Color color;
+    TerrainTypes terrainType;
+    public TerrainTypes TerrainType
+    {
+        get
+        {
+            return terrainType;
+        }
+        set
+        {
+            if (terrainType != value) {
+                terrainType = value;
+                Refresh();
+            }
+        }
+    }
     public Color Color
     {
         get
         {
-            return color;
-        }
-        set
-        {
-            color = value;
+            return HexMetrics.colors[(int)TerrainType];
         }
     }
 

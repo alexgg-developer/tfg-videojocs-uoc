@@ -9,6 +9,8 @@ public class HexGrid : MonoBehaviour
     private HexGridChunk chunkPrefab;
     [SerializeField]
     private Texture2D noiseSource;
+    [SerializeField]
+    private Color[] colors;
 #pragma warning restore 0649
 
     //[SerializeField]
@@ -25,7 +27,6 @@ public class HexGrid : MonoBehaviour
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
 
-    public Color defaultColor = Color.white;
     public Color touchedColor = Color.magenta;
 
     public enum TerrainTypes { GRASS, PLAIN, ICE, MOUNTAIN, WATER, SIZE }
@@ -37,9 +38,19 @@ public class HexGrid : MonoBehaviour
     void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
+        HexMetrics.colors = colors;
 
         //CreateChunks();
         //CreateCells();
+    }
+
+
+    void OnEnable()
+    {
+        if (!HexMetrics.noiseSource) {
+            HexMetrics.noiseSource = noiseSource;
+            HexMetrics.colors = colors;
+        }
     }
 
     /*void CreateChunks()
@@ -96,7 +107,6 @@ public class HexGrid : MonoBehaviour
         //cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.Color = defaultColor;
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         //label.rectTransform.SetParent(gridCanvas.transform, false);

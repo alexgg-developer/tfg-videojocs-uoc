@@ -23,13 +23,11 @@ public class HexMapEditor : MonoBehaviour
 
     OptionalToggle riverMode;
 
-    private Color[] colors;
-    private Color activeColor;
+    int activeTerrainTypeIndex;
     int activeElevation;
     int activeWaterLevel;
     int activeResource;
 
-    bool applyColor = true;
     private bool applyElevation = true;
     private bool applyWaterLevel = true;
     private bool applyResource = false;
@@ -37,18 +35,6 @@ public class HexMapEditor : MonoBehaviour
     bool isDrag;
     HexDirection dragDirection;
     HexCell previousCell;
-
-    void Awake()
-    {
-        colors = new Color[(int)TerrainTypes.SIZE];
-        colors[(int)TerrainTypes.GRASS] = Color.green;
-        colors[(int)TerrainTypes.ICE] = Color.white;
-        colors[(int)TerrainTypes.MOUNTAIN] = new Color(178f / 255f, 115f / 255f, 65f / 255f);
-        colors[(int)TerrainTypes.PLAIN] = Color.yellow;
-        colors[(int)TerrainTypes.WATER] = Color.cyan;
-
-        SelectColor(0);
-    }
 
     void Update()
     {
@@ -107,7 +93,7 @@ public class HexMapEditor : MonoBehaviour
         for (int i = 0; i < chunksZ * HexMetrics.chunkSizeZ; ++i) {
             for (int j = 0; j < cellsInX; ++j) {
                 //hexCells[i * cellsInX + j].Color = colors[Random.Range(0, (int)TerrainTypes.SIZE)];
-                hexCells[i * cellsInX + j].Color = colors[0];
+                hexCells[i * cellsInX + j].TerrainType = TerrainTypes.GRASS;
                 //hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
                 /*float random = Random.value;
                 if (random <= 0.12f) {
@@ -121,10 +107,10 @@ public class HexMapEditor : MonoBehaviour
     void EditCell(HexCell cell)
     {
 		if (cell) {
-			if (applyColor) {
-				cell.Color = activeColor;
-			}
-			if (applyElevation) {
+            if (activeTerrainTypeIndex >= 0) {
+                cell.TerrainType = (TerrainTypes)activeTerrainTypeIndex;
+            }
+            if (applyElevation) {
 				cell.Elevation = activeElevation;
 			}
             if (applyWaterLevel) {
@@ -145,14 +131,6 @@ public class HexMapEditor : MonoBehaviour
 				previousCell.SetOutgoingRiver(dragDirection);
 			}
 		}
-    }
-
-    public void SelectColor(int index)
-    {
-        applyColor = index >= 0;
-        if (applyColor) {
-            activeColor = colors[index];
-        }
     }
 
     public void SetElevation(float elevation)
@@ -189,5 +167,10 @@ public class HexMapEditor : MonoBehaviour
     public void SetResource(int resource)
     {
         activeResource = resource;
+    }
+
+    public void SetTerrainTypeIndex(int index)
+    {
+        activeTerrainTypeIndex = index;
     }
 }
