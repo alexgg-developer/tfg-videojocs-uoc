@@ -25,8 +25,10 @@ public class HexMapEditor : MonoBehaviour
     private Color[] colors;
     private Color activeColor;
     int activeElevation;
+    int activeWaterLevel;
     bool applyColor = true;
     private bool applyElevation = true;
+    private bool applyWaterLevel = true;
 
     bool isDrag;
     HexDirection dragDirection;
@@ -121,7 +123,11 @@ public class HexMapEditor : MonoBehaviour
 			if (applyElevation) {
 				cell.Elevation = activeElevation;
 			}
-			if (riverMode == OptionalToggle.No) {
+            if (applyWaterLevel) {
+                cell.WaterLevel = activeWaterLevel;
+            }
+
+            if (riverMode == OptionalToggle.No) {
 				cell.RemoveRiver();
 			}
 			else if (isDrag && riverMode == OptionalToggle.Yes) {
@@ -152,5 +158,15 @@ public class HexMapEditor : MonoBehaviour
     public void SetRiverMode(int mode)
     {
         riverMode = (OptionalToggle)mode;
+    }
+
+    public void SetApplyWaterLevel(bool toggle)
+    {
+        applyWaterLevel = toggle;
+    }
+
+    public void SetWaterLevel(float level)
+    {
+        activeWaterLevel = (int)level;
     }
 }

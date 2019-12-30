@@ -20,7 +20,7 @@ public static class HexMetrics
     public const float elevationPerturbStrength = 1.5f;
     public const int chunkSizeX = 4, chunkSizeZ = 4;
     public const float streamBedElevationOffset = -1.75f;
-    public const float riverSurfaceElevationOffset = -0.5f;
+    public const float waterElevationOffset = -0.5f;
 
     public static Texture2D noiseSource;
 
