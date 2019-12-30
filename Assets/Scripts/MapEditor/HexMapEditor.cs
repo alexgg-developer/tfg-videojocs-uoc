@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using static HexGrid;
 using static MapResource;
 using Random = UnityEngine.Random;
+using System.IO;
 
 public class HexMapEditor : MonoBehaviour
 {
@@ -172,5 +173,27 @@ public class HexMapEditor : MonoBehaviour
     public void SetTerrainTypeIndex(int index)
     {
         activeTerrainTypeIndex = index;
+    }
+
+    public void Save()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        //Debug.Log(path);
+        using (BinaryWriter writer =
+                new BinaryWriter(File.Open(path, FileMode.Create))) 
+        {
+			hexGrid.Save(writer);
+        }
+    }
+
+    public void Load()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        using (BinaryReader reader =
+                new BinaryReader(File.OpenRead(path))
+        ) 
+        {
+            hexGrid.Load(reader);
+        }
     }
 }

@@ -14,7 +14,8 @@ public class Logic : MonoBehaviour
 {
 #pragma warning disable 0649
     [SerializeField]
-    private RandomHexGridCreator gridCreator;
+    //private RandomHexGridCreator gridCreator;
+    private HexGridLoader gridCreator;
     [SerializeField]
     UnityIntEvent changeOfTurnEvent;
     [SerializeField]

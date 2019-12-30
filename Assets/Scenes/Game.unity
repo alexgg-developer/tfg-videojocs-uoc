@@ -12517,6 +12517,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1612973387}
   m_CullTransparentMesh: 0
+--- !u!1 &1620321262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1620321264}
+  - component: {fileID: 1620321265}
+  m_Layer: 0
+  m_Name: HexGridLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1620321264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620321262}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 688.5376, y: 325.86136, z: -398.875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1620321265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620321262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8700e4f7f3e864686e75f1b5edf6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hexGrid: {fileID: 1640579102}
+  chunksX: 3
+  chunksZ: 3
 --- !u!1 &1640170391
 GameObject:
   m_ObjectHideFlags: 0
@@ -12628,13 +12674,18 @@ MonoBehaviour:
   chunkPrefab: {fileID: 637552055576776324, guid: d8bba9b1ca0eadd49b28a2b9bd4f3429,
     type: 3}
   noiseSource: {fileID: 2800000, guid: 32b90803582e240409e7ea6b9e34c066, type: 3}
+  colors:
+  - {r: 0.24948794, g: 0.8396226, b: 0.122774996, a: 0}
+  - {r: 0.8679245, g: 0.72195613, b: 0.1760413, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.6603774, g: 0.40635675, b: 0.05918475, a: 0}
+  - {r: 0, g: 0.46812057, b: 1, a: 0}
   chunkCountX: 3
   chunkCountZ: 3
   cellPrefab: {fileID: 1978827528438129150, guid: 84eb781b7350a204d91eb4ddd7bcd5c1,
     type: 3}
   cellLabelPrefab: {fileID: 4934188258821608332, guid: daec97e1dd99e0c438dc0bc33ee5dcbc,
     type: 3}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
   touchedColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!4 &1640579103
 Transform:
@@ -15002,7 +15053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1519a7f14dc928a4c98949dfd6146728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridCreator: {fileID: 649621500}
+  gridCreator: {fileID: 1620321265}
   changeOfTurnEvent:
     m_PersistentCalls:
       m_Calls:

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using static HexGrid;
@@ -50,7 +51,8 @@ public class HexCell : MonoBehaviour
         set
         {
             elevation = value;
-            Vector3 position = transform.localPosition;
+            RefreshPosition();
+            /*Vector3 position = transform.localPosition;
             position.y = value * HexMetrics.elevationStep;
             position.y +=
                 (HexMetrics.SampleNoise(position).y * 2f - 1f) *
@@ -60,7 +62,7 @@ public class HexCell : MonoBehaviour
 
             Vector3 uiPosition = uiRect.localPosition;
             uiPosition.z = elevation * -HexMetrics.elevationStep;
-            uiRect.localPosition = uiPosition;
+            uiRect.localPosition = uiPosition;*/
 
             if (hasOutgoingRiver &&
                 elevation < GetNeighbor(outgoingRiver).elevation) {
@@ -380,5 +382,51 @@ public class HexCell : MonoBehaviour
     void RefreshSelfOnly()
     {
         chunk.Refresh();
+    }
+
+    void RefreshPosition()
+    {
+        Vector3 position = transform.localPosition;
+        position.y = elevation * HexMetrics.elevationStep;
+        position.y +=
+            (HexMetrics.SampleNoise(position).y * 2f - 1f) *
+            HexMetrics.elevationPerturbStrength;
+        transform.localPosition = position;
+
+        Vector3 uiPosition = uiRect.localPosition;
+        uiPosition.z = -position.y;
+        uiRect.localPosition = uiPosition;
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write((int)terrainType);
+        writer.Write(elevation);
+        writer.Write(waterLevel);
+
+        writer.Write(hasIncomingRiver);
+        writer.Write((int)incomingRiver);
+
+        writer.Write(hasOutgoingRiver);
+        writer.Write((int)outgoingRiver);
+
+        writer.Write((int)resource.Kind);
+    }
+
+    public void Load(BinaryReader reader)
+    {
+        terrainType = (TerrainTypes)reader.ReadInt32();
+        elevation = reader.ReadInt32();
+        waterLevel = reader.ReadInt32();
+        hasIncomingRiver = reader.ReadBoolean();
+        incomingRiver = (HexDirection)reader.ReadInt32();
+
+        hasOutgoingRiver = reader.ReadBoolean();
+        outgoingRiver = (HexDirection)reader.ReadInt32();
+
+        RefreshPosition();
+
+        ResourceKind resourceKind = (ResourceKind)reader.ReadInt32();
+        SetResource(resourceKind);
     }
 }
