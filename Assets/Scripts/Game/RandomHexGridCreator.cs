@@ -35,7 +35,7 @@ public class RandomHexGridCreator : MonoBehaviour
                 hexCells[i * cellsInX + j].Elevation = Random.Range(0, MaxElevation);
                 float random = Random.value;
                 if (random <= 0.12f) {
-                    hexCells[i * cellsInX + j].SetResource(true);
+                    hexCells[i * cellsInX + j].SetResource(MapResource.ResourceKind.CORN);
                 }
             }
         }

@@ -198,7 +198,7 @@ public class AIPlayer
     {
         if (logic.BuildCity(cell.coordinates)) {
             logic.RemoveUnit(settler);
-            cell.SetResource(false);
+            cell.SetResource(MapResource.ResourceKind.NONE);
         }
     }
 

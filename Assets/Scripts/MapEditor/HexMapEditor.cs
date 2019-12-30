@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static HexGrid;
+using static MapResource;
 using Random = UnityEngine.Random;
 
 public class HexMapEditor : MonoBehaviour
@@ -26,9 +27,12 @@ public class HexMapEditor : MonoBehaviour
     private Color activeColor;
     int activeElevation;
     int activeWaterLevel;
+    int activeResource;
+
     bool applyColor = true;
     private bool applyElevation = true;
     private bool applyWaterLevel = true;
+    private bool applyResource = false;
 
     bool isDrag;
     HexDirection dragDirection;
@@ -127,6 +131,13 @@ public class HexMapEditor : MonoBehaviour
                 cell.WaterLevel = activeWaterLevel;
             }
 
+            if(applyResource) {
+                cell.SetResource((ResourceKind)activeResource);
+            }
+            else {
+                cell.SetResource(ResourceKind.NONE);
+            }
+
             if (riverMode == OptionalToggle.No) {
 				cell.RemoveRiver();
 			}
@@ -168,5 +179,15 @@ public class HexMapEditor : MonoBehaviour
     public void SetWaterLevel(float level)
     {
         activeWaterLevel = (int)level;
+    }
+
+    public void SetApplyResource(bool toggle)
+    {
+        applyResource = toggle;
+    }
+
+    public void SetResource(int resource)
+    {
+        activeResource = resource;
     }
 }

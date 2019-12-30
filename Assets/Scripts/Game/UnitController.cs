@@ -269,7 +269,7 @@ public class UnitController : MonoBehaviour
             if (logic.BuildCity(cell.coordinates)) {
                 logic.RemoveUnit(unit);
                 Unselect();
-                cell.SetResource(false);
+                cell.SetResource(MapResource.ResourceKind.NONE);
             }
         }
     }

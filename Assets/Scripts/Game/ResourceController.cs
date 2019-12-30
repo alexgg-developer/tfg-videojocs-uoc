@@ -88,7 +88,7 @@ public class ResourceController : MonoBehaviour
     internal void CollectResource()
     {
         logic.OnScoreEvent(ScoreManager.TypesScore.RESOURCE, logic.CurrentPlayer);
-        selectedCell.SetResource(false);
+        selectedCell.SetResource(MapResource.ResourceKind.NONE);
         selectedCell.DisableHighlight();
         nearestCity.GrowCity();
         selectedCell = null;

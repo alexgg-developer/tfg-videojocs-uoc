@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 using static HexMetrics;
+using static MapResource;
 
 public class HexCell : MonoBehaviour
 {
@@ -68,22 +70,19 @@ public class HexCell : MonoBehaviour
             return transform.localPosition;
         }
     }
-    private bool hasResource = false;
+
+    MapResource resource = new MapResource();
     public bool HasResource
     {
         get
         {
-            return hasResource;
+            return resource.Kind != ResourceKind.NONE;
         }
-        set
-        {
-            hasResource = value;
-        }
-    }
+    }    
 
     public RectTransform uiRect;
 
-    private GameObject resource;
+    //private GameObject resource;
 
     #region rivers
     HexDirection incomingRiver, outgoingRiver;
@@ -333,21 +332,24 @@ public class HexCell : MonoBehaviour
         highlight.enabled = false;
     }
 
-    public void SetResource(bool activate)
+    public void SetResource(ResourceKind resourceKind)
     {
-        if (activate) {
-            resource = Instantiate(Resources.Load("Corn", typeof(GameObject)), gameObject.transform) as GameObject;
-            float offsetY = resource.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * resource.transform.localScale.y * 0.5f;
-            resource.transform.Translate(new Vector3(0f, offsetY, 0f));
-            hasResource = true;
+        GameObject resourceInstance = null;
+
+        if (resourceKind != ResourceKind.NONE) {
+            Destroy(resource.Instance);
+            string resourceName = resourceKind.ToString();
+            resourceName = resourceName.First().ToString() + resourceName.Substring(1).ToLower();
+            resourceInstance = Instantiate(Resources.Load(resourceName, typeof(GameObject)), gameObject.transform) as GameObject;
+            float offsetY = resourceInstance.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * resourceInstance.transform.localScale.y * 0.5f;
+            resourceInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         }
         else {
-            if (resource != null) {
-                Destroy(resource);
-                resource = null;
-                hasResource = false;
-            }
+            Destroy(resource.Instance);
         }
+
+        resource.Kind = resourceKind;
+        resource.Instance = resourceInstance;
     }
 
     void Refresh()
