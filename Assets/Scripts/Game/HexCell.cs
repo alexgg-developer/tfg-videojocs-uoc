@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -76,6 +77,8 @@ public class HexCell : MonoBehaviour
             Refresh();
         }
     }
+
+
     public Vector3 Position
     {
         get
@@ -91,7 +94,15 @@ public class HexCell : MonoBehaviour
         {
             return resource.Kind != ResourceKind.NONE;
         }
-    }    
+    }
+
+    public ResourceKind ResourceKind
+    {
+        get
+        {
+            return resource.Kind;
+        }
+    }
 
     public RectTransform uiRect;
 
@@ -296,7 +307,7 @@ public class HexCell : MonoBehaviour
 
     public HexCell GetRandomNeighbor()
     {
-        int direction = Random.Range(0, 5);
+        int direction = UnityEngine.Random.Range(0, 5);
 
         return neighbors[direction];
     }
@@ -365,6 +376,20 @@ public class HexCell : MonoBehaviour
         resource.Instance = resourceInstance;
     }
 
+
+    internal bool HasWaterInDaNeighborhood()
+    {
+        bool hasWater = false;
+        for (int i = 0; i < neighbors.Length && !hasWater; i++) {
+            HexCell neighbor = neighbors[i];
+            if (neighbor != null) {
+                hasWater = neighbor.IsUnderwater;
+            }
+        }
+
+        return hasWater;
+    }
+
     void Refresh()
     {
         if (chunk) {
@@ -377,7 +402,6 @@ public class HexCell : MonoBehaviour
             }
         }
     }
-
 
     void RefreshSelfOnly()
     {

@@ -90,6 +90,9 @@ public class UnitManager : MonoBehaviour
         Unit unitComponent = unitInstance.GetComponent<Unit>();
         unitComponent.PlayerID = playerID;
         float offsetY = unitInstance.GetComponent<MeshFilter>().mesh.bounds.size.y * unitInstance.transform.localScale.y * 0.5f;
+        if(type == UnitType.SHIP) {
+            offsetY += cell.WaterSurfaceY;
+        }
         unitInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         unitInstances.Add(unitInstance);
 

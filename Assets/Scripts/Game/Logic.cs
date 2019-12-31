@@ -70,7 +70,7 @@ public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = 
         initialPositions[0] = new Tuple<int,int>(0, 0);
         //initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 2, gridCreator.Height - 2);
         //initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 1, gridCreator.Height - 2);
-        initialPositions[1] = new Tuple<int, int>(1, 1);
+        initialPositions[1] = new Tuple<int, int>(4, 1);
         gridCreator.CreateGrid();
         for (int i = 0; i < numberPlayers; ++i) {
             UnitManager unitManager = Instantiate(Resources.Load("UnitManager", typeof(UnitManager))) as UnitManager;
@@ -113,7 +113,7 @@ public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = 
         return buildingInfo[(int)buildingType].ShieldCost;
     }
 
-    internal List<UnitType> GetUnitsAvailable()
+    internal List<UnitType> GetUnitsAvailable(bool hasAccesToWater)
     {
         List<UnitType> unitsAvailable = new List<UnitStats.UnitType>();
 
@@ -122,7 +122,7 @@ public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = 
         if (HasTechnology(TechnologyType.AGRICULTURE)) {
             unitsAvailable.Add(UnitType.HORSEMAN);
         }
-        if (HasTechnology(TechnologyType.NAVIGATION)) {
+        if (HasTechnology(TechnologyType.NAVIGATION) && hasAccesToWater) {
             unitsAvailable.Add(UnitType.SHIP);
         }
         if (HasTechnology(TechnologyType.ENGINEERING)) {

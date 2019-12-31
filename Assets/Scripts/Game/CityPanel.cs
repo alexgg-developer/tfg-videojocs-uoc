@@ -40,6 +40,7 @@ public class CityPanel : MonoBehaviour
     const uint TOTAL_BUY_BUTTONS = 6;
     const string NOT_ENOUGH_SHIELDS = "Not enough shields.";
     const string ALREADY_UNIT_CITY = "There is an unit already in the city.";
+    const string DOCK_NEEDED = "You need a dock to build ships.";
 
     Logic logic;
     bool showUnits = true;
@@ -89,7 +90,7 @@ public class CityPanel : MonoBehaviour
         if (logic.HasTechnology(TechnologyType.AGRICULTURE)) {
             buildingsAvailable.Add(BuildingType.BARN);
         }
-        if (logic.HasTechnology(TechnologyType.NAVIGATION)) {
+        if (logic.HasTechnology(TechnologyType.NAVIGATION) && selectedCity.HasAccesToWater) {
             buildingsAvailable.Add(BuildingType.DOCK);
         }
         if (logic.HasTechnology(TechnologyType.ENGINEERING)) {
@@ -99,7 +100,7 @@ public class CityPanel : MonoBehaviour
 
     private void SetUnitAvailability()
     {
-        unitsAvailable = logic.GetUnitsAvailable();
+        unitsAvailable = logic.GetUnitsAvailable(selectedCity.HasAccesToWater);
     }
 
     private void OnDisable()
@@ -209,6 +210,12 @@ public class CityPanel : MonoBehaviour
 
         if (showUnits) {
             UnitType unitType = unitsAvailable[selectedButton];
+            if(unitType == UnitType.SHIP) {
+                if (!selectedCity.HasBuilding(BuildingType.DOCK)) {
+                    descriptionSelectedText.text = DOCK_NEEDED;
+                    return;
+                }
+            }
             if (logic.IsThereEnoughShields(unitStats[(int)unitType].ShieldCost)) {
                 if (logic.TryBuildingUnit(unitType, selectedCity)) {
                     logic.TrySpendShields(unitStats[(int)unitType].ShieldCost);

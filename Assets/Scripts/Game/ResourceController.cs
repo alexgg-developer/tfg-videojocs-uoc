@@ -68,7 +68,12 @@ public class ResourceController : MonoBehaviour
             inMapResourcePanel.IsCityNear = true;
             inMapResourcePanel.NearestCity = nearestCity.Name;
         }
-        inMapResourcePanel.HasTechnology = logic.HasTechnology(TechnologyType.AGRICULTURE);
+        if (cell.ResourceKind == MapResource.ResourceKind.CORN) {
+            inMapResourcePanel.HasTechnology = logic.HasTechnology(TechnologyType.AGRICULTURE);
+        }
+        else if (cell.ResourceKind == MapResource.ResourceKind.FISH) {
+            inMapResourcePanel.HasTechnology = logic.HasTechnology(TechnologyType.NAVIGATION);
+        }
         //inMapResourcePanel.gameObject.SetActive(true);
         infoUserCanvas.OpenInMapResourcePanel();
     }

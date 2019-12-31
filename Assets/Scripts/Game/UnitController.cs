@@ -44,11 +44,13 @@ public class UnitController : MonoBehaviour
                 int distance = HexCoordinates.distance(cell.coordinates, selectedUnitGO.transform.parent.GetComponent<HexCell>().coordinates);
                 if (distance == 1) {
                     if (selectedUnit.MovementLeft < 1.0f) return;
-
                     if (cell != selectedUnitGO.transform.parent) {
+                        if (selectedUnit.Type == UnitStats.UnitType.SHIP) { MoveShip(cell, selectedUnit); return; }
+                        else if (cell.IsUnderwater) return;
+
                         int childCount = cell.gameObject.transform.childCount;
                         if (cell.HasResource) --childCount;
-                        if (cell != null && childCount > 0) {
+                        if (childCount > 0) {
                             City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
                             Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
                             bool thereIsCity = goalCity != null;
@@ -73,7 +75,7 @@ public class UnitController : MonoBehaviour
                             FightLogic(selectedUnitGO.GetComponent<Unit>(), goalUnit, thereIsCity, cell, goalCity);
                             return;
                         }
-                        else {
+                        else {                            
                             MoveUnit(selectedUnitGO, cell);
                         }
                     }
@@ -81,7 +83,8 @@ public class UnitController : MonoBehaviour
                         Debug.Log("same cell");
                     }
                 }
-                else if (distance == 2 && (selectedUnit.Type == UnitStats.UnitType.ARCHER || selectedUnit.Type == UnitStats.UnitType.CATAPULT)) {
+                else if (distance == 2 && 
+                    (selectedUnit.Type == UnitStats.UnitType.ARCHER || selectedUnit.Type == UnitStats.UnitType.CATAPULT || selectedUnit.Type == UnitStats.UnitType.SHIP)) {
                     //GameObject goalUnitGO = cell.gameObject.transform.GetChild(0).gameObject;
                     City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
                     Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
@@ -105,6 +108,35 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    private void MoveShip(HexCell cell, Unit selectedUnit)
+    {
+        int childCount = cell.gameObject.transform.childCount;
+        if (cell.HasResource) --childCount;
+        if (childCount > 0) {
+            City goalCity = cell.gameObject.transform.GetComponentInChildren<City>();
+            Unit goalUnit = cell.gameObject.transform.GetComponentInChildren<Unit>();
+            bool thereIsCity = goalCity != null;
+            if (thereIsCity && goalUnit == null) {
+                if (goalCity.PlayerID == currentPlayerID) {
+                    MoveUnit(selectedUnitGO, cell);
+                    return;
+                }
+            }
+
+            if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
+            if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT || selectedUnit.Type == UnitStats.UnitType.SETTLER) return;
+
+            if (DistanceFight(selectedUnit, goalUnit, thereIsCity)) {
+                scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
+                logic.RemoveUnit(goalUnit);
+            }
+        }
+        else {
+            if (cell.IsUnderwater) {
+                MoveUnit(selectedUnitGO, cell);
+            }
+        }
+    }
 
     private void ConquerCity(int conquererPlayerID, int defeatedPlayerID, int cityID)
     {

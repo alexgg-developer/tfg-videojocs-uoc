@@ -36,16 +36,18 @@ public class CityManager : MonoBehaviour
     public void AddCity(int index)
     {
         HexCell cell = grid.GetCell(index);
-        AddCityInCell(cell);
+        City city = AddCityInCell(cell);
+        city.HasAccesToWater = cell.HasWaterInDaNeighborhood();
     }
 
     public void AddCity(HexCoordinates hexCoordinates)
     {
         HexCell cell = grid.GetCell(hexCoordinates.X, hexCoordinates.Z);
-        AddCityInCell(cell);
+        City city = AddCityInCell(cell);
+        city.HasAccesToWater = cell.HasWaterInDaNeighborhood();
     }
 
-    private void AddCityInCell(HexCell cell)
+    private City AddCityInCell(HexCell cell)
     {
         GameObject cityInstance = Instantiate(currentCityPrefabs[0], cell.transform);
         City cityComponent = cityInstance.GetComponent<City>();
@@ -54,6 +56,8 @@ public class CityManager : MonoBehaviour
         float offsetY = cityInstance.GetComponentInChildren<MeshFilter>().mesh.bounds.size.y * cityInstance.transform.localScale.y * 0.5f;
         cityInstance.transform.Translate(new Vector3(0f, offsetY, 0f));
         cities.Add(cityComponent);
+
+        return cityComponent;
     }
 
     public uint CalculateShieldsPerTurn()

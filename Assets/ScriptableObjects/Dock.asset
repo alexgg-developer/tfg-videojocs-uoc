@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Dock
   m_EditorClassIdentifier: 
   Icon: anchor
-  Description: Let you fish.and build ships.
+  Description: Let you build ships.
   ShieldCost: 20
   Type: 0

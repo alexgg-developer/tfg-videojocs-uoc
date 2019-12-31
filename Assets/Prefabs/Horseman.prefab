@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitStats: {fileID: 11400000, guid: 940de84ada860b04fa47f1dfe8459307, type: 2}
+  healthBar: {fileID: 8599451714772108635}
 --- !u!1001 &764419461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -219,6 +220,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 764419461}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8599451714772108635 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8599451715534428382, guid: d2f6f91b2a804704c96100e646d5c25e,
+    type: 3}
+  m_PrefabInstance: {fileID: 764419461}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &767722478050326472
 PrefabInstance:
   m_ObjectHideFlags: 0

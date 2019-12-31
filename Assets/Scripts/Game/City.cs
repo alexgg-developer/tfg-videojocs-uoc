@@ -22,6 +22,8 @@ public class City : MonoBehaviour
     public int PlayerID { get { return playerID; } set { playerID = value; } }
     private string cityName = "";
     public string Name { get { return cityName; } set { cityName = value; } }
+    bool hasAccesToWater = false;
+    public bool HasAccesToWater { get { return hasAccesToWater; } set { hasAccesToWater = value; } }
 
     private HashSet<BuildingInfo.BuildingType> buildingsBuilt = new HashSet<BuildingInfo.BuildingType>();
 

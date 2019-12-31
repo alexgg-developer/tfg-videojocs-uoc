@@ -58,9 +58,9 @@ public class AIPlayer
                         List<City> cities = logic.GetCities();
                         if (cities.Count > 0) {
                             Debug.Log("More than one city");
-                            List<UnitType> unitsAvailable = logic.GetUnitsAvailable();
-                            int unitChosen = UnityEngine.Random.Range(0, unitsAvailable.Count);
                             int cityChosen = UnityEngine.Random.Range(0, cities.Count);
+                            List<UnitType> unitsAvailable = logic.GetUnitsAvailable(cities[cityChosen].HasAccesToWater);
+                            int unitChosen = UnityEngine.Random.Range(0, unitsAvailable.Count);
                             if (logic.IsThereEnoughShields(unitStats[(int)unitsAvailable[unitChosen]].ShieldCost)) {
                                 if (logic.TryBuildingUnit(unitsAvailable[unitChosen], cities[cityChosen])) {
                                     logic.TrySpendShields(unitStats[(int)unitChosen].ShieldCost);
