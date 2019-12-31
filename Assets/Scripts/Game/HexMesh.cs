@@ -7,7 +7,7 @@ using static HexMetrics;
 public class HexMesh : MonoBehaviour
 {
 
-    [NonSerialized] List<Vector3> vertices;
+    [NonSerialized] public List<Vector3> vertices, terrainTypes;
     [NonSerialized] List<Color> colors;
     [NonSerialized] List<int> triangles;
     [NonSerialized] List<Vector2> uvs;
@@ -16,7 +16,7 @@ public class HexMesh : MonoBehaviour
     MeshCollider meshCollider;
 
     public bool useCollider, useColors, useUVCoordinates;
-
+    public bool useTerrainTypes;
 
     void Awake()
     {
@@ -41,6 +41,9 @@ public class HexMesh : MonoBehaviour
         if (useColors) {
             colors.Clear();
         }
+        if (useTerrainTypes) {
+            terrainTypes = ListPool<Vector3>.Get();
+        }
         triangles.Clear();
     }
 
@@ -52,6 +55,10 @@ public class HexMesh : MonoBehaviour
             hexMesh.SetColors(colors);
             ListPool<Color>.Add(colors);
         }
+        if (useTerrainTypes) {
+            hexMesh.SetUVs(2, terrainTypes);
+            ListPool<Vector3>.Add(terrainTypes);
+        }
         hexMesh.SetTriangles(triangles, 0);
         ListPool<int>.Add(triangles);
         hexMesh.RecalculateNormals();
@@ -62,6 +69,21 @@ public class HexMesh : MonoBehaviour
             hexMesh.SetUVs(0, uvs);
             ListPool<Vector2>.Add(uvs);
         }
+    }
+
+    public void AddTriangleTerrainTypes(Vector3 types)
+    {
+        terrainTypes.Add(types);
+        terrainTypes.Add(types);
+        terrainTypes.Add(types);
+    }
+
+    public void AddQuadTerrainTypes(Vector3 types)
+    {
+        terrainTypes.Add(types);
+        terrainTypes.Add(types);
+        terrainTypes.Add(types);
+        terrainTypes.Add(types);
     }
 
     public void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
