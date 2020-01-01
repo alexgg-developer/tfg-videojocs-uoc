@@ -164,16 +164,19 @@ public class AIPlayer
     void TryAttack()
     {
         var units = player.GetUnits();
-        for (int i = units.Count - 1; i >= 0; --i) {
+        List<Unit> unitsAttacked = new List<Unit>();
+        for (int i = units.Count - 1; i >= 0; --i) {            
             var unit = units[i];
             Unit unitComponent = unit.GetComponent<Unit>();
-            if (unitComponent.Type != UnitStats.UnitType.SETTLER) {
-                var cell = unit.transform.parent.GetComponent<HexCell>();
-                var cellToAttack = CanAttackUnit(cell);
-                if (cellToAttack != null) {
-                    var unitInGoalCell = cellToAttack.gameObject.GetComponentInChildren<Unit>();
-                    var cityInGoalCell = cellToAttack.gameObject.GetComponentInChildren<City>();
+            if (unitComponent.HasAttacked || unitComponent.Type == UnitStats.UnitType.CATAPULT || unitComponent.Type == UnitStats.UnitType.SETTLER) return;
+            var cell = unit.transform.parent.GetComponent<HexCell>();
+            var cellToAttack = CanAttackUnit(cell);
+            if (cellToAttack != null) {
+                var unitInGoalCell = cellToAttack.gameObject.GetComponentInChildren<Unit>();
+                var cityInGoalCell = cellToAttack.gameObject.GetComponentInChildren<City>();
+                if (!unitsAttacked.Contains(unitInGoalCell)) {
                     unitController.FightLogic(unitComponent, unitInGoalCell, cityInGoalCell != null, cellToAttack, cityInGoalCell);
+                    unitsAttacked.Add(unitInGoalCell);
                 }
             }
         }

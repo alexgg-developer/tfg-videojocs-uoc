@@ -30,6 +30,8 @@ public class Logic : MonoBehaviour
     BuildingInfo[] buildingInfo;
     [SerializeField]
     TechnologyInfo[] technologyInfo;
+    [SerializeField]
+    private AnimationController animationController;
 #pragma warning restore 0649
     public ScoreManager scoreManager;
 
@@ -52,6 +54,8 @@ public class Logic : MonoBehaviour
     bool isCurrentPlayerAI  = false;
     public bool IsCurrentPlayerAI { get { return isCurrentPlayerAI; } set { isCurrentPlayerAI = value; } }
 
+    public bool IsAnimationOn { get { return animationController.IsAnimationOn; } }
+
 
     /*private Unit lastUnitBuilt = null;
 public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = value; } }*/
@@ -70,7 +74,7 @@ public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = 
         initialPositions[0] = new Tuple<int,int>(0, 0);
         //initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 2, gridCreator.Height - 2);
         //initialPositions[1] = new Tuple<int, int>(gridCreator.Width - 1, gridCreator.Height - 2);
-        initialPositions[1] = new Tuple<int, int>(4, 1);
+        initialPositions[1] = new Tuple<int, int>(1, 1);
         gridCreator.CreateGrid();
         for (int i = 0; i < numberPlayers; ++i) {
             UnitManager unitManager = Instantiate(Resources.Load("UnitManager", typeof(UnitManager))) as UnitManager;

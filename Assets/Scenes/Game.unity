@@ -15144,6 +15144,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c8bf853b094f76b4ebace14d78318f54, type: 2}
   - {fileID: 11400000, guid: de76d01507d0a0b44a0f1e60922826fc, type: 2}
   - {fileID: 11400000, guid: fe7bea8f073eacf479fdc021e9b3e256, type: 2}
+  animationController: {fileID: 2000302720}
 --- !u!114 &2000302717
 MonoBehaviour:
   m_ObjectHideFlags: 0

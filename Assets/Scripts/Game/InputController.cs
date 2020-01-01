@@ -28,7 +28,7 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (logic.IsEndOfGame || logic.IsCurrentPlayerAI) return;
+        if (logic.IsEndOfGame || logic.IsCurrentPlayerAI || logic.IsAnimationOn) return;
 
         if (Input.GetKeyUp(KeyCode.B)) {
             unitController.SettlerCommand();
