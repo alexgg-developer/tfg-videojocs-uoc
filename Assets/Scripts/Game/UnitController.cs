@@ -19,6 +19,7 @@ public class UnitController : MonoBehaviour
 #pragma warning restore 0649
 
     Logic logic;
+    AnimationController animationController;
     int currentPlayerID = 0;
 
     GameObject selectedUnitGO = null;
@@ -29,6 +30,7 @@ public class UnitController : MonoBehaviour
     void Start()
     {
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<Logic>();
+        animationController = logic.GetComponent<AnimationController>();
     }
 
     public void Move()
@@ -146,6 +148,26 @@ public class UnitController : MonoBehaviour
     
     void MoveUnit(GameObject unitToMove, HexCell cellToMoveTo)
     {
+        float offsetY = unitToMove.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.transform.localScale.y * 0.5f;
+        Vector3 newPosition = new Vector3(cellToMoveTo.transform.position.x, cellToMoveTo.transform.position.y + offsetY, cellToMoveTo.transform.position.z);
+        Vector3 movement = newPosition - unitToMove.transform.position;
+        MoveBy moveUnitAnimationBy = new MoveBy(movement, 0.25f, unitToMove);
+
+        
+        Caller caller = new Caller();
+        caller.ActionFunction = () => MoveUnitCallback(unitToMove, cellToMoveTo); 
+
+        Sequencer sequence = new Sequencer();
+        sequence.Add(moveUnitAnimationBy);
+        sequence.Add(caller);
+
+        animationController.Add(sequence);
+
+    }
+
+    void MoveUnitCallback(GameObject unitToMove, HexCell cellToMoveTo)
+    {
+
         unitToMove.transform.SetParent(cellToMoveTo.transform);
         float offsetY = unitToMove.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.transform.localScale.y * 0.5f;
         unitToMove.transform.localPosition = new Vector3(0f, offsetY, 0f);
@@ -154,10 +176,9 @@ public class UnitController : MonoBehaviour
         unit.OnNewPosition();
         SwitchSelectedCell(cellToMoveTo, unit.PlayerID);
         infoUserCanvas.UpdateUnitPanel();
+    }
 
-    } 
-
-    public void Select()
+        public void Select()
     {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -240,15 +261,15 @@ public class UnitController : MonoBehaviour
         }
 
         if (selectedUnit.CurrentHealth == 0) {
-            Debug.Log("defender winner");
+            //Debug.Log("defender winner");
         }
         else {
-            Debug.Log("attacker winner");
+            //Debug.Log("attacker winner");
             hasWon = true;
         }
-        Debug.Log("selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
-        Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
-
+        //Debug.Log("selectedUnit.CurrentHealth:" + selectedUnit.CurrentHealth);
+        //Debug.Log("goalUnit.CurrentHealth:" + goalUnit.CurrentHealth);
+    
         return hasWon;
     }
 
