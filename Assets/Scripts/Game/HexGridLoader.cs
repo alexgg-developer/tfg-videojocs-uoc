@@ -29,7 +29,8 @@ public class HexGridLoader : MonoBehaviour
 
     public void Load()
     {
-        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        //string path = Path.Combine(Application.persistentDataPath, "test.map");
+        string path = Path.Combine("", "test.map");
         using (BinaryReader reader =
                 new BinaryReader(File.OpenRead(path))
         ) {
