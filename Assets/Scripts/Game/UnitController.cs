@@ -23,6 +23,13 @@ public class UnitController : MonoBehaviour
 
     GameObject selectedUnitGO = null;
     HexCell selectedCell = null;
+    public UnityScoreEvent ScoreEvent
+    {
+        get
+        {
+            return scoreEvent;
+        }
+    }
 
 
     // Start is called before the first frame update
@@ -379,7 +386,7 @@ public class UnitController : MonoBehaviour
         animationController.Add(sequencer);
     }
 
-    void DistanceFight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, Action winAction)
+    public void DistanceFight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, Action winAction)
     {
         selectedUnit.HasAttacked = true;
         //3 attacks

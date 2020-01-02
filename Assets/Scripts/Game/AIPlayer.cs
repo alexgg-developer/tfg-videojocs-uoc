@@ -29,6 +29,7 @@ public class AIPlayer
     internal void InitialTasks()
     {
         tasks.Enqueue(new Action(TryBuildingCity));
+        tasks.Enqueue(new Action(TryDistanceAttack));
         tasks.Enqueue(new Action(TryAttack));
         tasks.Enqueue(new Action(MoveUnits));
         tasks.Enqueue(new Action(ScheduleTask));
@@ -37,7 +38,7 @@ public class AIPlayer
 
     private void ScheduleTask()
     {
-        Debug.Log("Turn: " + logic.Turn.ToString());
+        //Debug.Log("Turn: " + logic.Turn.ToString());
         if (currentScheduledTask == ScheduledTask.NONE) {
             float random = UnityEngine.Random.value;
             if (random < 0.33f) {
@@ -49,15 +50,15 @@ public class AIPlayer
             else {
                 currentScheduledTask = ScheduledTask.INVESTIGATE;
             }
-            Debug.Log("ScheduleTask: " + currentScheduledTask.ToString());
+            //Debug.Log("ScheduleTask: " + currentScheduledTask.ToString());
         }
         else {
-            switch(currentScheduledTask) {
+            switch (currentScheduledTask) {
                 case ScheduledTask.BUILD_UNIT: {
-                        Debug.Log("Try building unit");
+                        //Debug.Log("Try building unit");
                         List<City> cities = logic.GetCities();
                         if (cities.Count > 0) {
-                            Debug.Log("More than one city");
+                            //Debug.Log("More than one city");
                             int cityChosen = UnityEngine.Random.Range(0, cities.Count);
                             List<UnitType> unitsAvailable = logic.GetUnitsAvailable(cities[cityChosen].HasAccesToWater);
                             int unitChosen = UnityEngine.Random.Range(0, unitsAvailable.Count);
@@ -117,7 +118,7 @@ public class AIPlayer
                     break;
             }
         }
-        Debug.Log("end Turn: " + logic.Turn.ToString());
+        //Debug.Log("end Turn: " + logic.Turn.ToString());
     }
 
     internal void NextTask()
@@ -143,7 +144,13 @@ public class AIPlayer
             while (unitComponent.MovementLeft > 0 && t <= MAX_TRIES) {
                 ++t;
                 var cell = unit.transform.parent.GetComponent<HexCell>();
-                var neighborCell = cell.GetRandomNeighbor();
+                HexCell neighborCell = null;
+                if (unitComponent.Type != UnitType.SHIP) {
+                    neighborCell = cell.GetRandomNeighborIsNotUnderWater();
+                }
+                else {
+                    neighborCell = cell.GetRandomNeighborIsUnderWater();
+                }
                 if (neighborCell != null) {
                     var cityInGoalCell = neighborCell.gameObject.GetComponentInChildren<City>();
                     var unitInGoalCell = neighborCell.gameObject.GetComponentInChildren<Unit>();
@@ -161,14 +168,42 @@ public class AIPlayer
         }
     }
 
+    void TryDistanceAttack()
+    {
+        var units = player.GetUnits();
+        List<Unit> unitsAttacked = new List<Unit>();
+        for (int i = units.Count - 1; i >= 0; --i) {
+            var unit = units[i];
+            Unit unitComponent = unit.GetComponent<Unit>();
+            if (unitComponent.HasAttacked) continue;
+            if (unitComponent.Type == UnitStats.UnitType.CATAPULT || unitComponent.Type == UnitStats.UnitType.ARCHER) {
+                var cell = unit.transform.parent.GetComponent<HexCell>();
+                var cellToAttack = CanDistanceAttackUnit(cell);
+                if (cellToAttack != null) {
+                    var unitInGoalCell = cellToAttack.gameObject.GetComponentInChildren<Unit>();
+                    var cityInGoalCell = cellToAttack.gameObject.GetComponentInChildren<City>();
+                    if (!unitsAttacked.Contains(unitInGoalCell)) {
+                        Action winAction = () =>
+                        {
+                            unitController.ScoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, unitComponent.PlayerID);
+                            logic.RemoveUnit(unitComponent);
+                        };
+                        unitController.DistanceFight(unitComponent, unitInGoalCell, cityInGoalCell != null, winAction);
+                        unitsAttacked.Add(unitInGoalCell);
+                    }
+                }
+            }
+        }
+    }
+
     void TryAttack()
     {
         var units = player.GetUnits();
         List<Unit> unitsAttacked = new List<Unit>();
-        for (int i = units.Count - 1; i >= 0; --i) {            
+        for (int i = units.Count - 1; i >= 0; --i) {
             var unit = units[i];
             Unit unitComponent = unit.GetComponent<Unit>();
-            if (unitComponent.HasAttacked || unitComponent.Type == UnitStats.UnitType.CATAPULT || unitComponent.Type == UnitStats.UnitType.SETTLER) return;
+            if (unitComponent.HasAttacked || unitComponent.Type == UnitStats.UnitType.CATAPULT || unitComponent.Type == UnitStats.UnitType.SETTLER) continue;
             var cell = unit.transform.parent.GetComponent<HexCell>();
             var cellToAttack = CanAttackUnit(cell);
             if (cellToAttack != null) {
@@ -225,7 +260,7 @@ public class AIPlayer
                 if (neighbor != null) {
                     var unitInGoalCell = neighbor.gameObject.GetComponentInChildren<Unit>();
                     if (unitInGoalCell != null && unitInGoalCell.PlayerID != player.PlayerID) {
-                        cellToAttack = unitInGoalCell.transform.parent.GetComponent<HexCell>();
+                        cellToAttack = neighbor;
                         break;
                     }
                 }
@@ -235,6 +270,32 @@ public class AIPlayer
         return cellToAttack;
     }
 
+    HexCell CanDistanceAttackUnit(HexCell cell)
+    {
+        var neighbors = cell.GetNeighbors();
+        HexCell cellToAttack = null;
+        List<HexCell> candidates = new List<HexCell>();
+
+        foreach (var neighbor in neighbors) {
+            if (neighbor != null) {
+                var secondLevelNeighbors = neighbor.GetNeighbors();
+                foreach (var secondLevelNeighbor in secondLevelNeighbors) {
+                    if (secondLevelNeighbor != null) {
+                        int distance = HexCoordinates.distance(cell.coordinates, secondLevelNeighbor.coordinates);
+                        if (distance == 2) {
+                            var unitInGoalCell = secondLevelNeighbor.gameObject.GetComponentInChildren<Unit>();
+                            if (unitInGoalCell != null && unitInGoalCell.PlayerID != player.PlayerID) {
+                                cellToAttack = secondLevelNeighbor;
+                                return cellToAttack;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return cellToAttack;
+    }
     bool CanBuildCity(HexCell cell)
     {
         var neighbors = cell.GetNeighbors();

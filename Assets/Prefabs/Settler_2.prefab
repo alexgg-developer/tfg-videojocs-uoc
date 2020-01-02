@@ -392,6 +392,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasWound
       objectReference: {fileID: 0}
+    - target: {fileID: 8599451714291955276, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -450,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.77
       objectReference: {fileID: 0}
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}
@@ -460,12 +465,12 @@ PrefabInstance:
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8599451714291955275, guid: 0dc24d46a2f9c9f44a459561ffceb7b3,
         type: 3}

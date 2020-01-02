@@ -305,11 +305,41 @@ public class HexCell : MonoBehaviour
         return neighbors;
     }
 
-    public HexCell GetRandomNeighbor()
+    /*public HexCell GetRandomNeighbor()
     {
         int direction = UnityEngine.Random.Range(0, 5);
 
         return neighbors[direction];
+    }*/
+
+    public HexCell GetRandomNeighborIsNotUnderWater()
+    {
+        int direction = UnityEngine.Random.Range(0, 5);
+        int tries = 0;
+        while(tries < 6) {
+            if (neighbors[direction] != null && !neighbors[direction].IsUnderwater) {
+                return neighbors[direction];
+            }
+            direction = (direction + 1) % 6;
+            ++tries;
+        }
+
+        return null;
+    }
+
+    public HexCell GetRandomNeighborIsUnderWater()
+    {
+        int direction = UnityEngine.Random.Range(0, 5);
+        int tries = 0;
+        while (tries < 6) {
+            if (neighbors[direction] != null && neighbors[direction].IsUnderwater) {
+                return neighbors[direction];
+            }
+            direction = (direction + 1) % 6;
+            ++tries;
+        }
+
+        return null;
     }
 
     public HexCell GetNeighbor(HexDirection direction)

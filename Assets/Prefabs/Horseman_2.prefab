@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitStats: {fileID: 11400000, guid: 940de84ada860b04fa47f1dfe8459307, type: 2}
-  healthBar: {fileID: 8599451715167636814}
+  healthBar: {fileID: 8599451715232370406}
   woundImage: {fileID: 8158307365076758929}
 --- !u!1001 &373118352
 PrefabInstance:
@@ -222,9 +222,9 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 373118352}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8599451715167636814 stripped
+--- !u!114 &8599451715232370406 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8599451715534428382, guid: d2f6f91b2a804704c96100e646d5c25e,
+  m_CorrespondingSourceObject: {fileID: 8599451715469695862, guid: d2f6f91b2a804704c96100e646d5c25e,
     type: 3}
   m_PrefabInstance: {fileID: 373118352}
   m_PrefabAsset: {fileID: 0}

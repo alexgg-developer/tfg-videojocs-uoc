@@ -85,7 +85,7 @@ public class UnitPanel : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("OnDisable");
+        //Debug.Log("OnDisable");
         selectedButton = -1;
         descriptionSelectedPanel.SetActive(false);
     }

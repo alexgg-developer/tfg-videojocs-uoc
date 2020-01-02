@@ -174,13 +174,14 @@ public Unit LastUnitBuilt { get { return lastUnitBuilt; } set { lastUnitBuilt = 
     {
         if (isEndOfGame) return;
 
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            NextPlayer();
-        }
-
-        if(IsCurrentPlayerAI) {
-            aiPlayer.NextTask();
-            if (!aiPlayer.IsThereTasks()) {
+        if (!IsAnimationOn) {
+            if (IsCurrentPlayerAI) {
+                aiPlayer.NextTask();
+                if (!aiPlayer.IsThereTasks()) {
+                    NextPlayer();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Space)) {
                 NextPlayer();
             }
         }

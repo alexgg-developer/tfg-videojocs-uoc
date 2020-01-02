@@ -44,6 +44,7 @@ public class UnitManager : MonoBehaviour
 
         int index = initialPosition.Item1 + initialPosition.Item2 * grid.CellCountX;
         AddUnit(index, UnitType.WARRIOR);
+        //AddUnit(index, UnitType.HORSEMAN);
         //AddUnit(index, UnitType.ARCHER);
         //AddUnit(index, UnitType.CATAPULT);
         index = initialPosition.Item1 + (initialPosition.Item2 + 1) * grid.CellCountX;
