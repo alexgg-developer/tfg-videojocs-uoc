@@ -12,6 +12,8 @@ public class Unit : MonoBehaviour
     private UnitStats unitStats;
     [SerializeField]
     private Image healthBar;
+    [SerializeField]
+    private GameObject woundImage;
 
     private static int nextID = 0;
 
@@ -69,6 +71,16 @@ public class Unit : MonoBehaviour
     private void OnDestroy()
     {
         
+    }
+
+    public void ToggleWound()
+    {
+        woundImage.SetActive(!woundImage.activeInHierarchy);
+    }
+
+    public void ToggleWound(bool value)
+    {
+        woundImage.SetActive(value);
     }
 }
 

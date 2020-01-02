@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class UnitController : MonoBehaviour
@@ -92,17 +93,12 @@ public class UnitController : MonoBehaviour
 
                     if (goalUnit == null || goalUnit.PlayerID == currentPlayerID || selectedUnit.HasAttacked) return;
 
-                    /*bool isDead = false;
-                    if (selectedUnit.Type == UnitStats.UnitType.CATAPULT && isDefenderInCity) {
-                        isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
-                    }
-                    else {
-                        isDead = DistanceFight(selectedUnit, goalUnit, isDefenderInCity);
-                    }*/
-                    if (DistanceFight(selectedUnit, goalUnit, isDefenderInCity)) {
+                    Action winAction = () =>
+                    {
                         scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                         logic.RemoveUnit(goalUnit);
-                    }
+                    };
+                    DistanceFight(selectedUnit, goalUnit, isDefenderInCity, winAction);
                 }
             }
         }
@@ -125,11 +121,12 @@ public class UnitController : MonoBehaviour
 
             if (goalUnit == null || goalUnit.PlayerID == currentPlayerID) return;
             if (selectedUnit.HasAttacked || selectedUnit.Type == UnitStats.UnitType.CATAPULT || selectedUnit.Type == UnitStats.UnitType.SETTLER) return;
-
-            if (DistanceFight(selectedUnit, goalUnit, thereIsCity)) {
+            Action winAction = () =>
+            {
                 scoreEvent.Invoke(ScoreManager.TypesScore.FIGHT, selectedUnit.PlayerID);
                 logic.RemoveUnit(goalUnit);
-            }
+            };
+            DistanceFight(selectedUnit, goalUnit, thereIsCity, winAction);
         }
         else {
             if (cell.IsUnderwater) {
@@ -255,6 +252,41 @@ public class UnitController : MonoBehaviour
 
     }
 
+    public void DistanceAttackAnimation(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, Sequencer sequencer,
+        ref int goalUnitCurrentHealth)
+    {
+        float bonusCity = isDefenderInCity ? goalUnit.Defense * 0.5f : 0.0f;
+        bonusCity = selectedUnit.Type == UnitStats.UnitType.CATAPULT ? 0.0f : bonusCity;
+        float totalAttack = selectedUnit.Attack + (goalUnit.Defense + bonusCity);
+        float probabilityVictorySelected = (float)selectedUnit.Attack / (float)totalAttack;
+
+        Unit unitToMove = selectedUnit;
+        Unit unitToHurt = goalUnit;
+        goalUnitCurrentHealth--;
+        float offsetY = unitToMove.gameObject.GetComponent<MeshFilter>().mesh.bounds.size.y * unitToMove.gameObject.transform.localScale.y * 0.5f;
+        Vector3 newPosition = new Vector3(
+            unitToHurt.gameObject.transform.position.x,
+            unitToHurt.gameObject.transform.position.y + offsetY,
+            unitToHurt.gameObject.transform.position.z);
+        Vector3 movement = newPosition - unitToMove.gameObject.transform.position;
+        movement = movement * 0.1f;
+        MoveBy unitMovementAnimation = new MoveBy(movement, 0.1f, unitToMove.gameObject);
+        sequencer.Add(unitMovementAnimation);
+        Caller togglePunchCaller = new Caller();
+        togglePunchCaller.ActionFunction = () => unitToHurt.ToggleWound(true);
+        sequencer.Add(togglePunchCaller);
+
+        MoveBy reverseUnitMovementAnimation = new MoveBy(-movement, 0.15f, unitToMove.gameObject);
+        sequencer.Add(reverseUnitMovementAnimation);
+        Caller reverseTogglePunchCaller = new Caller();
+        reverseTogglePunchCaller.ActionFunction = () => unitToHurt.ToggleWound(false);
+        sequencer.Add(reverseTogglePunchCaller);
+
+        Caller caller = new Caller();
+        caller.ActionFunction = () => unitToHurt.CurrentHealth--;
+        sequencer.Add(caller);
+    }
+
     public void AttackAnimation(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, Sequencer sequencer,
         ref int selectedUnitCurrentHealth, ref int goalUnitCurrentHealth, bool distanceAttack)
     {
@@ -284,9 +316,15 @@ public class UnitController : MonoBehaviour
             unitToHurt.gameObject.transform.position.z);
         Vector3 movement = newPosition - unitToMove.gameObject.transform.position;
         MoveBy unitMovementAnimation = new MoveBy(movement, 0.15f, unitToMove.gameObject);
-        MoveBy reverseUnitMovementAnimation = new MoveBy(-movement, 0.15f, unitToMove.gameObject);
         sequencer.Add(unitMovementAnimation);
+        Caller togglePunchCaller = new Caller();
+        togglePunchCaller.ActionFunction = () => unitToHurt.ToggleWound(true);
+        sequencer.Add(togglePunchCaller);
+        MoveBy reverseUnitMovementAnimation = new MoveBy(-movement, 0.15f, unitToMove.gameObject);
         sequencer.Add(reverseUnitMovementAnimation);
+        Caller reverseTogglePunchCaller = new Caller();
+        reverseTogglePunchCaller.ActionFunction = () => unitToHurt.ToggleWound(false);
+        sequencer.Add(reverseTogglePunchCaller);
 
         Caller caller = new Caller();
         caller.ActionFunction = () => unitToHurt.CurrentHealth--;
@@ -310,7 +348,7 @@ public class UnitController : MonoBehaviour
         while (selectedUnitCurrentHealth > 0 && goalUnitCurrentHealth > 0) {
             AttackAnimation(selectedUnit, goalUnit, isDefenderInCity, sequencer, ref selectedUnitCurrentHealth, ref goalUnitCurrentHealth, false);
         }
-        
+
         Caller caller = new Caller();
 
         if (selectedUnitCurrentHealth == 0) {
@@ -341,17 +379,23 @@ public class UnitController : MonoBehaviour
         animationController.Add(sequencer);
     }
 
-    bool DistanceFight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity)
+    void DistanceFight(Unit selectedUnit, Unit goalUnit, bool isDefenderInCity, Action winAction)
     {
         selectedUnit.HasAttacked = true;
         //3 attacks
-        bool goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
+        Sequencer sequencer = new Sequencer();
+        int goalUnitCurrentHealth = goalUnit.CurrentHealth;
+        bool goalUnitIsDead = goalUnitCurrentHealth <= 0.0f;
         for (int i = 0; i < 3 && !goalUnitIsDead; ++i) {
-            Attack(selectedUnit, goalUnit, isDefenderInCity, true);
-            goalUnitIsDead = goalUnit.CurrentHealth <= 0.0f;
+            DistanceAttackAnimation(selectedUnit, goalUnit, isDefenderInCity, sequencer, ref goalUnitCurrentHealth);
+            goalUnitIsDead = goalUnitCurrentHealth <= 0.0f;
         }
-
-        return goalUnitIsDead;
+        if(goalUnitIsDead) {
+            Caller caller = new Caller();
+            caller.ActionFunction = winAction;
+            sequencer.Add(caller);
+        }
+        animationController.Add(sequencer);
     }
 
     public void OnChangeOfPlayer(int newPlayerID)
