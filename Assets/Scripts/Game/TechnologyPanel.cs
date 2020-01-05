@@ -54,6 +54,9 @@ public class TechnologyPanel : MonoBehaviour
     private void OnEnable()
     {
         OnOpenEvent.Invoke();
+        if (logic != null) {
+            ShowTechnologyButtons();
+        }
     }
 
     private void OnDisable()

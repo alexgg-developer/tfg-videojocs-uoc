@@ -75,8 +75,9 @@ public class InfoUserCanvas : MonoBehaviour
 
     public void OnChangeOfPlayer(int newPlayerID)
     {
-        technologyPanel.SetActive(false);
-        cityPanel.SetActive(false);
+        //technologyPanel.SetActive(false);
+        //cityPanel.SetActive(false);
+        ClosePanels();
         if(logic.IsCurrentPlayerAI) {
             buttonMenuPanel.interactable = false;
             buttonTechnologyPanel.interactable = false;

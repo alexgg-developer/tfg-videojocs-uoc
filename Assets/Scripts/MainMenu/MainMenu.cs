@@ -7,8 +7,11 @@ public class MainMenu : MonoBehaviour
 {
     private void Start()
     {
-        PlayerPrefs.SetInt("Turns", 60);
-        PlayerPrefs.SetInt("IAPlayer", 1);
+        int turns = PlayerPrefs.GetInt("Turns" , 0);
+        if (turns == 0) {
+            PlayerPrefs.SetInt("Turns", 60);
+            PlayerPrefs.SetInt("IAPlayer", 1);
+        }
     }
     public void PlayGame()
     {
