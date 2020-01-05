@@ -49,7 +49,7 @@ public class Logic : MonoBehaviour
     public bool IsEndOfGame { get { return isEndOfGame; } set { isEndOfGame = value; } }
     int turnsToPlay = 200;
     public int TurnsToPlay { get { return turnsToPlay; } set { turnsToPlay = value; } }
-    bool isThereAI = true;
+    bool isThereAI = false;
     public bool IsThereAI { get { return isThereAI; } set { isThereAI = value; } }
     bool isCurrentPlayerAI  = false;
     public bool IsCurrentPlayerAI { get { return isCurrentPlayerAI; } set { isCurrentPlayerAI = value; } }

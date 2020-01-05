@@ -9,8 +9,8 @@ public class Player
     protected UnitManager unitManager;
     protected CityManager cityManager;
     protected TechnologyManager technologyManager;
+    //protected uint shields = 0;
     protected uint shields = 0;
-    //protected uint shields = 200;
     public uint Shields { get { return shields; } set { shields = value; } }
     protected int score = 0;
     public int Score { get { return score; } set { score = value; } }
