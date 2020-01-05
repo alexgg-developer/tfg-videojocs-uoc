@@ -17,6 +17,8 @@ MonoBehaviour:
   Movement: 1
   Health: 10
   Icon: archer
-  Description: Unit that can attack from to two tiles away.
+  Description: Unit that can attack from to two tiles away. It makes 3 damage each
+    attack.
   ShieldCost: 4
   Type: 4
+  Action: 0

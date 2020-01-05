@@ -5,6 +5,7 @@ using static HexGrid;
 using static MapResource;
 using Random = UnityEngine.Random;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class HexMapEditor : MonoBehaviour
 {
@@ -220,5 +221,17 @@ public class HexMapEditor : MonoBehaviour
             // we currently have no platform define for the current OS we are in, so we resort to this
             e.HelpLink = ""; // do anything with this variable to silence warning about not using it
         }
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(1);
+        PlayerPrefs.SetInt("SceneToLoad", 0);
+    }
+
+    public void Exit()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
     }
 }

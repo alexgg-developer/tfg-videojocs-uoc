@@ -393,7 +393,8 @@ public class UnitController : MonoBehaviour
         Sequencer sequencer = new Sequencer();
         int goalUnitCurrentHealth = goalUnit.CurrentHealth;
         bool goalUnitIsDead = goalUnitCurrentHealth <= 0.0f;
-        for (int i = 0; i < 3 && !goalUnitIsDead; ++i) {
+        int numberOfAttacks = selectedUnit.Type != UnitStats.UnitType.CATAPULT ? 3 : 5;
+        for (int i = 0; i < numberOfAttacks && !goalUnitIsDead; ++i) {
             DistanceAttackAnimation(selectedUnit, goalUnit, isDefenderInCity, sequencer, ref goalUnitCurrentHealth);
             goalUnitIsDead = goalUnitCurrentHealth <= 0.0f;
         }

@@ -117,8 +117,7 @@ public class HexGridChunk : MonoBehaviour
 
     void TriangulateWater(HexDirection direction, HexCell cell, Vector3 center)
     {
-
-        int diffStart = terrain.vertices.Count - terrain.terrainTypes.Count;
+        //int diffStart = terrain.vertices.Count - terrain.terrainTypes.Count;
         center.y = cell.WaterSurfaceY;
         Vector3 c1 = center + HexMetrics.GetFirstSolidCorner(direction);
         Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(direction);
@@ -147,14 +146,14 @@ public class HexGridChunk : MonoBehaviour
                 );
             }
         }
-        int diffEnd = terrain.vertices.Count - terrain.terrainTypes.Count;
+        /*int diffEnd = terrain.vertices.Count - terrain.terrainTypes.Count;
         if (terrain.vertices.Count != terrain.terrainTypes.Count && diffStart != diffEnd) {
             Debug.Log("END TriangulateWater::");
             Debug.Log("terrain.vertices.Count::" + terrain.vertices.Count);
             Debug.Log("terrain.terrainTypes.Count::" + terrain.terrainTypes.Count);
             Debug.Log("diffStart::" + diffStart);
             Debug.Log("diffEnd::" + diffEnd);
-        }
+        }*/
     }
 
     void TriangulateAdjacentToRiver(

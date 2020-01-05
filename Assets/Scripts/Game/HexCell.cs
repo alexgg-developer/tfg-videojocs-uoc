@@ -12,8 +12,8 @@ public class HexCell : MonoBehaviour
     static private Color[] highLightColors =
     {
 
-        new Color(0f, 0f, 1.0f),
-        new Color(1.0f, 0f, 0.0f)
+        new Color(0f, 0f, 1.0f, 0.3f),
+        new Color(1.0f, 0f, 0.0f, 0.3f)
     };
 
     public HexCoordinates coordinates;

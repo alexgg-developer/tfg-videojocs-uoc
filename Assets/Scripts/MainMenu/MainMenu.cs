@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     private void Start()
     {
-        PlayerPrefs.SetInt("Turns", 120);
+        PlayerPrefs.SetInt("Turns", 60);
         PlayerPrefs.SetInt("IAPlayer", 1);
     }
     public void PlayGame()
@@ -20,5 +20,12 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Quit");
         Application.Quit();
+    }
+
+
+    public void LoadEditor()
+    {
+        SceneManager.LoadScene(1);
+        PlayerPrefs.SetInt("SceneToLoad", 3);
     }
 }

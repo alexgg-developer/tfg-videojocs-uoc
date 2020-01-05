@@ -19,5 +19,7 @@ MonoBehaviour:
   Icon: catapult
   Description: Unit that can attack from to two tiles away and it is not affected
     by city defenses. Can't attack to adjacent tiles and it does not have any defense.
+    It makes 5 damage each attack.
   ShieldCost: 6
   Type: 5
+  Action: 0
